@@ -684,17 +684,11 @@
 <script src="/pldios-api.js"></script>
 <script>
 async function loadDashboard(){
-    const context = await getDistributorContext();
-    if(!context) return;
-    applyDistributorIdentity(context);
+    const user = requireLogin();
+    if(!user) return;
+    applyDistributorIdentity({ displayName: user.name, displayArea: user.area });
 
-    if(!context.complete){
-        alert("Lengkapi profil distributor dulu sebelum membuat PO.");
-        window.location.href = "/profile.html";
-        return;
-    }
-
-    const data = await apiRequest(`/api/dashboard?role=${context.user.role}&userId=${context.user.id}`);
+    const data = await apiRequest(`/api/dashboard?role=${user.role}&userId=${user.id}`);
     document.getElementById("totalPo").textContent = data.summary.totalPo;
     document.getElementById("pendingPo").textContent = data.summary.pendingPo;
     document.getElementById("approvedPo").textContent = data.summary.approvedPo;

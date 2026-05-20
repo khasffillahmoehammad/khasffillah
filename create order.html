@@ -222,87 +222,140 @@
             font-size:14px;
         }
 
-        /* PRODUCT GRID */
+        /* PRODUCT TABLE */
 
-        .product-grid{
-            display:grid;
-            grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
-            gap:25px;
-        }
-
-        .product-card{
+        .products-section{
             background:white;
             border-radius:20px;
-            padding:25px;
+            padding:30px;
             box-shadow:0 4px 20px rgba(0,0,0,0.05);
-            transition:0.3s;
-            position:relative;
-            overflow:hidden;
+            margin-bottom:30px;
         }
 
-        .product-card:hover{
-            transform:translateY(-5px);
+        .filter-bar{
+            background:#f8fafc;
+            border-radius:12px;
+            padding:14px 16px;
+            margin-bottom:20px;
+            display:flex;
+            gap:10px;
+            flex-wrap:wrap;
+            align-items:center;
+        }
+
+        .filter-bar input,.filter-bar select{
+            border-radius:9px;
+            border:1px solid #ddd;
+            padding:8px 12px;
+            font-size:13px;
+        }
+
+        .products-table{
+            width:100%;
+            border-collapse:collapse;
+            margin-bottom:20px;
+        }
+
+        .products-table th{
+            background:#f8fafc;
+            font-size:12px;
+            color:#667085;
+            font-weight:700;
+            padding:12px;
+            border-bottom:1px solid #eef2f7;
+            text-align:left;
+        }
+
+        .products-table td{
+            padding:12px;
+            border-bottom:1px solid #f5f7fa;
+            font-size:13px;
+            vertical-align:middle;
+        }
+
+        .products-table tr:hover td{
+            background:#f8fafc;
         }
 
         .status-badge{
-            position:absolute;
-            top:20px;
-            right:20px;
-            padding:8px 14px;
+            display:inline-block;
+            padding:5px 10px;
             border-radius:20px;
-            font-size:12px;
+            font-size:11px;
             font-weight:700;
         }
 
-        .available{
+        .status-ready{
             background:#d4edda;
             color:#155724;
         }
 
-        .empty{
+        .status-no-stock{
             background:#f8d7da;
             color:#721c24;
         }
 
-        .product-card h4{
-            font-weight:700;
-            color:#003366;
-            margin-bottom:10px;
-            padding-right:100px;
-        }
-
-        .category{
-            color:#777;
-            margin-bottom:20px;
-            font-size:14px;
-        }
-
-        .info-box{
-            background:#f8fafc;
-            border-radius:14px;
-            padding:14px;
-            margin-bottom:12px;
-            font-size:14px;
-        }
-
-        .info-box strong{
-            color:#003366;
+        .status-no-alloc{
+            background:#fff3cd;
+            color:#856404;
         }
 
         .qty-input{
             width:100%;
-            height:50px;
-            border-radius:14px;
+            max-width:120px;
+            height:40px;
+            border-radius:8px;
             border:1px solid #ddd;
-            padding-left:15px;
-            margin-top:10px;
-            font-size:14px;
+            padding:6px 10px;
+            text-align:center;
+            font-size:13px;
+        }
+
+        .qty-input:disabled{
+            background:#f0f0f0;
+            cursor:not-allowed;
+            opacity:0.6;
         }
 
         .qty-input:focus{
             border-color:#0046ad;
             outline:none;
-            box-shadow:0 0 0 0.2rem rgba(0,70,173,0.15);
+            box-shadow:0 0 0 3px rgba(0,70,173,0.1);
+        }
+
+        .pagination-container{
+            display:flex;
+            justify-content:center;
+            gap:5px;
+            margin-top:20px;
+        }
+
+        .pagination-btn{
+            border:1px solid #ddd;
+            background:white;
+            color:#003366;
+            padding:6px 12px;
+            border-radius:6px;
+            cursor:pointer;
+            font-size:13px;
+            font-weight:600;
+            transition:0.2s;
+        }
+
+        .pagination-btn:hover{
+            background:#f8fafc;
+            border-color:#0046ad;
+        }
+
+        .pagination-btn.active{
+            background:#0046ad;
+            color:white;
+            border-color:#0046ad;
+        }
+
+        .pagination-btn:disabled{
+            opacity:0.5;
+            cursor:not-allowed;
         }
 
         /* BUTTON */
@@ -329,18 +382,6 @@
             box-shadow:0 8px 20px rgba(0,0,0,0.2);
         }
 
-        /* SEGMENT INFO */
-
-        .segment-info{
-            background:#eef4ff;
-            border-radius:10px;
-            padding:8px 12px;
-            font-size:13px;
-            color:#0046ad;
-            font-weight:600;
-            margin-bottom:10px;
-        }
-
         @media(max-width:992px){
             .sidebar{width:100%;height:auto;position:relative;}
             .main-content{margin-left:0;}
@@ -348,7 +389,8 @@
 
         @media(max-width:768px){
             .topbar{flex-direction:column;gap:15px;align-items:flex-start;}
-            .product-grid{grid-template-columns:1fr;}
+            .filter-bar{flex-direction:column;}
+            .filter-bar input,.filter-bar select{width:100%;}
         }
 
     </style>
@@ -477,12 +519,43 @@
 
     </div>
 
-    <!-- PRODUCT -->
+    <!-- PRODUCT LIST -->
 
-    <div class="section-title">Product List</div>
+    <div class="products-section">
 
-    <div class="product-grid" id="productGrid">
-        <div class="text-muted">Memuat produk...</div>
+        <div class="section-title">Product List</div>
+
+        <div class="filter-bar">
+            <input type="text" id="productSearch" placeholder="Cari produk / kode..." style="flex:1;min-width:250px;">
+            <select id="productCategory" style="min-width:180px;">
+                <option value="">Semua Kategori</option>
+            </select>
+        </div>
+
+        <div style="overflow-x:auto;">
+            <table class="products-table">
+                <thead>
+                    <tr>
+                        <th>Kode Produk</th>
+                        <th>Nama Produk</th>
+                        <th>Kategori</th>
+                        <th>UOM</th>
+                        <th>Alokasi</th>
+                        <th>Stock Status</th>
+                        <th>Qty Order</th>
+                    </tr>
+                </thead>
+                <tbody id="productsTableBody">
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-4">Memuat produk...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- PAGINATION -->
+        <div class="pagination-container" id="paginationContainer"></div>
+
     </div>
 
     <!-- BUTTON -->
@@ -499,45 +572,10 @@
 <script src="/pldios-api.js"></script>
 <script>
 
-const distributorTerritories = {
-    "PT. SUTAN KASIM": ["TERRITORY ACEH BARAT"],
-    "PT. NUSANTARA INDO BERJAYA": ["TERRITORY ACEH SELATAN"],
-    "PT. CITRA BINTANG FAMILINDO": ["TERRITORY ACEH TIMUR TENGAH"],
-    "PT. SUKA MELAJU": ["TERRITORY AGAM"],
-    "PT. POLA RAYA JAYA SAKTI": ["TERRITORY ASAHAN","TERRITORY MEDAN TENGGARA","TERRITORY SIMALUNGUN"],
-    "PT. KANDE AGUNG": ["TERRITORY BANDA ACEH"],
-    "PT. RUSEL VICTORY NUSANTARA": ["TERRITORY BATAM I"],
-    "PT. MAHARDHIKA CIPTA NUSA": ["TERRITORY BATAM II","TERRITORY TANJUNG PINANG"],
-    "PT. SAMUDRA JAYA RAYA": ["TERRITORY BINJAI LANGKAT"],
-    "PT. DELIMA TRI SAKTI": ["TERRITORY BUKIT TINGGI","TERRITORY SOLOK"],
-    "PT. PEMBINA CITRA UTAMARAYA": ["TERRITORY DHARMASRAYA","TERRITORY PADANG 3"],
-    "PT. MAJU JAYA LUBRICANTS": ["TERRITORY DUMAI","TERRITORY ROHIL"],
-    "PT. NAPCO": ["TERRITORY INDRAGIRI","TERRITORY PEKANBARU 1"],
-    "PT. RIAU MANDIRI EKA SAKTI": ["TERRITORY KAMPAR 1","TERRITORY PEKANBARU 3"],
-    "PT. PUTRA BANGGA KIRANA": ["TERRITORY KARO"],
-    "PT. SERDANG JAYA": ["TERRITORY LABUHAN BATU","TERRITORY MEDAN UTARA"],
-    "PT. LARIS SUMUT MAKMUR": ["TERRITORY MEDAN SELATAN"],
-    "PT. TETEN GAZALI": ["TERRITORY PADANG 4"],
-    "PT. SUMBAR SURYA SEJATI": ["TERRITORY PADANG 5"],
-    "PT. SUKSES RIAU PERMATA": ["TERRITORY PEKANBARU 2"],
-    "PT. INDRA ANGKOLA LUB": ["TERRITORY TAPANULI SELATAN"],
-    "PT. EKA PRIMA SEMESTA": ["TERRITORY TEBING TINGGI"]
-};
-
+const ITEMS_PER_PAGE = 100;
 let productsCache = [];
-
-function loadTerritories(distributorName){
-    const select = document.getElementById("territorySelect");
-    const key = Object.keys(distributorTerritories).find(k =>
-        k.toUpperCase() === (distributorName || "").toUpperCase()
-    );
-    const territories = key ? distributorTerritories[key] : [];
-    if(!territories.length){
-        select.innerHTML = `<option value="">Tidak ada territory terdaftar</option>`;
-        return;
-    }
-    select.innerHTML = territories.map(t => `<option value="${t}">${t}</option>`).join("");
-}
+let currentPage = 1;
+let filteredProducts = [];
 
 function getSegmentData(product, segment){
     if(segment === "retail"){
@@ -558,75 +596,168 @@ function getSegmentData(product, segment){
     return { alloc: 0, remaining: 0 };
 }
 
-function renderProducts(products){
-    const segment = document.getElementById("segmentSelect").value;
-    const segLabel = segment.charAt(0).toUpperCase() + segment.slice(1);
+function getProductStatus(product, segment){
+    const seg = getSegmentData(product, segment);
+    const hasStock = product.stockStatus === "Ready";
+    const hasAlloc = seg.remaining > 0;
 
-    document.getElementById("productGrid").innerHTML = products.map(product => {
-        const seg = getSegmentData(product, segment);
-        const retail = getSegmentData(product, "retail");
-        const industri = getSegmentData(product, "industri");
-        const available = product.stockStatus === "Ready" && seg.remaining > 0;
-
-        return `
-            <div class="product-card">
-                <span class="status-badge ${available ? "available" : "empty"}">
-                    ${available ? "Available" : "Out Of Stock"}
-                </span>
-                <h4>${product.name}</h4>
-                <div class="category">${product.category}</div>
-
-                <div class="info-box">
-                    <strong>Alokasi Retail:</strong> ${retail.remaining} / ${retail.alloc} Dus
-                </div>
-                <div class="info-box">
-                    <strong>Alokasi Industri:</strong> ${industri.remaining} / ${industri.alloc} Dus
-                </div>
-                <div class="info-box">
-                    <strong>Stock Status:</strong> ${product.stockStatus}
-                </div>
-
-                <div class="segment-info">
-                    <i class="fas fa-tag me-1"></i>
-                    Segmen ${segLabel} — Sisa Alokasi: ${seg.remaining} Dus
-                </div>
-
-                <input
-                    type="number"
-                    class="qty-input"
-                    data-product-id="${product.id}"
-                    data-product-name="${product.name}"
-                    min="0"
-                    max="${seg.remaining}"
-                    placeholder="Input Qty Order (Dus)"
-                    ${available ? "" : "disabled"}
-                >
-            </div>
-        `;
-    }).join("");
+    if(!hasStock && !hasAlloc){
+        return { status: "no-stock-alloc", label: "No Stock & No Allocation", disabled: true };
+    }
+    if(!hasStock){
+        return { status: "no-stock", label: "No Stock", disabled: true };
+    }
+    if(!hasAlloc){
+        return { status: "no-alloc", label: "No Allocation", disabled: true };
+    }
+    return { status: "ready", label: "Ready", disabled: false };
 }
 
-async function loadCreateOrder(){
-    const context = await getDistributorContext();
-    if(!context) return;
-    applyDistributorIdentity(context);
-    loadTerritories(context.user.name);
-    document.getElementById("orderDate").value = new Date().toISOString().slice(0, 16);
+function renderProducts(page = 1){
+    const segment = document.getElementById("segmentSelect").value;
+    const startIdx = (page - 1) * ITEMS_PER_PAGE;
+    const endIdx = startIdx + ITEMS_PER_PAGE;
+    const pageProducts = filteredProducts.slice(startIdx, endIdx);
 
-    if(!context.complete){
-        alert("Lengkapi profil distributor dulu sebelum membuat PO.");
-        window.location.href = "/profile.html";
+    if(filteredProducts.length === 0){
+        document.getElementById("productsTableBody").innerHTML = `
+            <tr><td colspan="7" class="text-center text-muted py-4">Tidak ada produk yang ditemukan.</td></tr>
+        `;
+        document.getElementById("paginationContainer").innerHTML = "";
         return;
     }
 
-    const data = await apiRequest(`/api/products?distributorId=${context.user.id}`);
+    document.getElementById("productsTableBody").innerHTML = pageProducts.map(product => {
+        const seg = getSegmentData(product, segment);
+        const prodStatus = getProductStatus(product, segment);
+        const statusClass = `status-${prodStatus.status}`;
+
+        return `
+            <tr>
+                <td><strong>${product.id || "-"}</strong></td>
+                <td>${product.name || "-"}</td>
+                <td>${product.category || "-"}</td>
+                <td>${product.uom || "-"}</td>
+                <td>${seg.remaining} / ${seg.alloc} Dus</td>
+                <td>
+                    <span class="status-badge ${statusClass}">
+                        ${prodStatus.label}
+                    </span>
+                </td>
+                <td>
+                    <input 
+                        type="number" 
+                        class="qty-input product-qty" 
+                        data-product-id="${product.id}"
+                        data-product-name="${product.name}"
+                        data-segment="${segment}"
+                        min="0" 
+                        max="${seg.remaining}"
+                        placeholder="0"
+                        ${prodStatus.disabled ? "disabled" : ""}
+                    >
+                </td>
+            </tr>
+        `;
+    }).join("");
+
+    renderPagination(page);
+}
+
+function renderPagination(currentPageNum){
+    const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
+    if(totalPages <= 1){
+        document.getElementById("paginationContainer").innerHTML = "";
+        return;
+    }
+
+    let paginationHTML = `<button class="pagination-btn" ${currentPageNum === 1 ? "disabled" : ""} onclick="goToPage(1)">First</button>`;
+    paginationHTML += `<button class="pagination-btn" ${currentPageNum === 1 ? "disabled" : ""} onclick="goToPage(${currentPageNum - 1})">Prev</button>`;
+
+    for(let i = Math.max(1, currentPageNum - 2); i <= Math.min(totalPages, currentPageNum + 2); i++){
+        paginationHTML += `<button class="pagination-btn ${i === currentPageNum ? "active" : ""}" onclick="goToPage(${i})">${i}</button>`;
+    }
+
+    paginationHTML += `<button class="pagination-btn" ${currentPageNum === totalPages ? "disabled" : ""} onclick="goToPage(${currentPageNum + 1})">Next</button>`;
+    paginationHTML += `<button class="pagination-btn" ${currentPageNum === totalPages ? "disabled" : ""} onclick="goToPage(${totalPages})">Last</button>`;
+
+    document.getElementById("paginationContainer").innerHTML = paginationHTML;
+}
+
+function goToPage(page){
+    currentPage = page;
+    renderProducts(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function filterProducts(){
+    const search = document.getElementById("productSearch").value.toLowerCase();
+    const category = document.getElementById("productCategory").value;
+
+    filteredProducts = productsCache.filter(p => {
+        const matchesSearch = !search || 
+            (p.name && p.name.toLowerCase().includes(search)) || 
+            (p.id && p.id.toLowerCase().includes(search));
+        const matchesCategory = !category || (p.category && p.category === category);
+        return matchesSearch && matchesCategory;
+    });
+
+    currentPage = 1;
+    renderProducts(1);
+}
+
+function loadTerritories(distributorName){
+    const distributorTerritories = {
+        "PT. SUTAN KASIM": ["TERRITORY ACEH BARAT"],
+        "PT. NUSANTARA INDO BERJAYA": ["TERRITORY ACEH SELATAN"],
+        "PT. CITRA BINTANG FAMILINDO": ["TERRITORY ACEH TIMUR TENGAH"],
+        "PT. POLA RAYA JAYA SAKTI": ["TERRITORY ASAHAN","TERRITORY MEDAN TENGGARA","TERRITORY SIMALUNGUN"],
+        "PT. KANDE AGUNG": ["TERRITORY BANDA ACEH"],
+        "PT. SAMUDRA JAYA RAYA": ["TERRITORY BINJAI LANGKAT"],
+        "PT. PUTRA BANGGA KIRANA": ["TERRITORY KARO"],
+        "PT. SERDANG JAYA": ["TERRITORY LABUHAN BATU","TERRITORY MEDAN UTARA"],
+        "PT. LARIS SUMUT MAKMUR": ["TERRITORY MEDAN SELATAN"],
+        "PT. INDRA ANGKOLA LUB": ["TERRITORY TAPANULI SELATAN"],
+        "PT. EKA PRIMA SEMESTA": ["TERRITORY TEBING TINGGI"]
+    };
+
+    const select = document.getElementById("territorySelect");
+    const key = Object.keys(distributorTerritories).find(k =>
+        k.toUpperCase() === (distributorName || "").toUpperCase()
+    );
+    const territories = key ? distributorTerritories[key] : [];
+    if(!territories.length){
+        select.innerHTML = `<option value="">Tidak ada territory terdaftar</option>`;
+        return;
+    }
+    select.innerHTML = territories.map(t => `<option value="${t}">${t}</option>`).join("");
+}
+
+async function loadCreateOrder(){
+    const user = requireLogin();
+    if(!user) return;
+    applyDistributorIdentity({ displayName: user.name, displayArea: user.area });
+    loadTerritories(user.name);
+    document.getElementById("orderDate").value = new Date().toISOString().slice(0, 16);
+
+    const data = await apiRequest(`/api/products?distributorId=${user.id}`);
     productsCache = data.products;
-    renderProducts(productsCache);
+    
+    const categories = [...new Set(productsCache.map(p => p.category).filter(Boolean))];
+    const categorySelect = document.getElementById("productCategory");
+    categorySelect.innerHTML = `<option value="">Semua Kategori</option>` + 
+        categories.map(c => `<option value="${c}">${c}</option>`).join("");
+
+    filterProducts();
 }
 
 document.getElementById("segmentSelect").addEventListener("change", () => {
-    renderProducts(productsCache);
+    currentPage = 1;
+    renderProducts(1);
 });
+
+document.getElementById("productSearch").addEventListener("input", filterProducts);
+document.getElementById("productCategory").addEventListener("change", filterProducts);
 
 document.getElementById("confirmOrderBtn").addEventListener("click", function(){
     const user = getStoredUser();
@@ -641,7 +772,7 @@ document.getElementById("confirmOrderBtn").addEventListener("click", function(){
     if(!territory){ alert("Pilih territory terlebih dahulu."); return; }
     if(!customerName){ alert("Isi nama customer terlebih dahulu."); return; }
 
-    const items = Array.from(document.querySelectorAll(".qty-input"))
+    const items = Array.from(document.querySelectorAll(".product-qty"))
         .map(input => ({
             productId: input.dataset.productId,
             productName: input.dataset.productName,
