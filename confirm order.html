@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PL-DIOS | Confirm Order</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="/distributor-shell.css">
+
+<style>
+
+/* ================= GLOBAL ================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Segoe UI', sans-serif;
+    background:#f4f7fb;
+}
+
+/* ================= SIDEBAR ================= */
+
+.sidebar{
+
+    width:260px;
+    height:100vh;
+
+    position:fixed;
+    left:0;
+    top:0;
+
+    background:linear-gradient(
+        180deg,
+        #0046ad 0%,
+        #0066cc 20%,
+        #00a651 70%,
+        #008f6b 100%
+    );
+
+    background-size:400% 400%;
+    animation:move 10s ease infinite;
+
+    color:white;
+    padding:25px 20px;
+    overflow-y:auto;
+
+    box-shadow:5px 0 25px rgba(0,0,0,0.15);
+}
+
+@keyframes move{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+
+/* LOGO */
+
+.logo{
+    text-align:center;
+    margin-bottom:35px;
+}
+
+.logo h2{
+    font-size:34px;
+    font-weight:800;
+}
+
+.logo p{
+    font-size:12px;
+    opacity:0.9;
+}
+
+/* MENU */
+
+.menu-title{
+    font-size:11px;
+    opacity:0.8;
+    margin:10px 0;
+}
+
+.sidebar-menu{
+    list-style:none;
+}
+
+.sidebar-menu li{
+    margin-bottom:10px;
+}
+
+.sidebar-menu a{
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    padding:14px 16px;
+    border-radius:14px;
+
+    color:white;
+    text-decoration:none;
+
+    transition:0.3s;
+}
+
+.sidebar-menu a:hover,
+.sidebar-menu .active{
+    background:rgba(255,255,255,0.18);
+}
+
+/* ================= MAIN ================= */
+
+.main-content{
+    margin-left:260px;
+    padding:30px;
+}
+
+/* TOPBAR */
+
+.topbar{
+    background:white;
+    padding:20px;
+    border-radius:18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 4px 20px rgba(0,0,0,0.05);
+}
+
+.topbar h3{
+    color:#003366;
+    font-weight:700;
+}
+
+/* CARD */
+
+.card-box{
+    background:white;
+    padding:25px;
+    border-radius:18px;
+    margin-top:20px;
+    box-shadow:0 4px 20px rgba(0,0,0,0.05);
+}
+
+.title{
+    font-weight:700;
+    color:#003366;
+    margin-bottom:15px;
+}
+
+/* TABLE */
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+table th, table td{
+    border:1px solid #ddd;
+    padding:10px;
+}
+
+table th{
+    background:#f3f6fb;
+}
+
+/* CONFIRM */
+
+.confirm-box{
+    margin-top:20px;
+    background:#f8fafc;
+    padding:15px;
+    border-radius:12px;
+    display:flex;
+    gap:10px;
+}
+
+/* BUTTON */
+
+.btn-main{
+    margin-top:20px;
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:14px;
+    background:linear-gradient(90deg,#0046ad,#00a651);
+    color:white;
+    font-weight:700;
+}
+
+.status{
+    padding:8px 14px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:700;
+}
+
+.status.pending{background:#fff3cd;color:#856404;}
+.status.approved{background:#d4edda;color:#155724;}
+.status.process{background:#cce5ff;color:#004085;}
+
+/* ================= NOTIFICATION BOX ================= */
+
+.notif-box{
+
+    display:none;
+
+    position:fixed;
+    top:20px;
+    right:20px;
+
+    width:320px;
+
+    background:#ffffff;
+    border-left:6px solid #00a651;
+
+    padding:15px 18px;
+    border-radius:12px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,0.15);
+
+    animation:slideIn 0.4s ease;
+}
+
+.notif-box i{
+    color:#00a651;
+    font-size:20px;
+    margin-right:8px;
+}
+
+.notif-text{
+    font-size:14px;
+    color:#333;
+}
+
+@keyframes slideIn{
+    from{
+        transform:translateX(120%);
+        opacity:0;
+    }
+    to{
+        transform:translateX(0);
+        opacity:1;
+    }
+}
+
+</style>
+
+</head>
+
+<body class="pldios-distributor">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+
+    <div class="logo">
+        <h2>PL-DIOS</h2>
+        <p>Distributor Integrated Ordering System</p>
+    </div>
+
+    <div class="menu-title">MAIN MENU</div>
+
+    <ul class="sidebar-menu">
+
+        <li><a href="/menu%20utama.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+        <li><a href="/create%20order.html"><i class="fas fa-cart-plus"></i> Create Order</a></li>
+        <li><a href="/confirm%20order.html"><i class="fas fa-file-alt"></i> Order History</a></li>
+        <li><a href="/notifications.html"><i class="fas fa-bell"></i> Notifications</a></li>
+        <li><a href="/profile.html"><i class="fas fa-user"></i> Profile</a></li>
+        <li><a href="#" onclick="logout()"><i class="fas fa-right-from-bracket"></i> Logout</a></li>
+
+    </ul>
+
+</div>
+
+<!-- MAIN -->
+<div class="main-content">
+
+    <div class="topbar">
+        <h3 id="pageTitle">Confirm Order</h3>
+        <strong>PT Pertamina Lubricants</strong>
+    </div>
+
+    <div class="card-box" id="confirmSummary">
+
+        <div class="title">Order Summary</div>
+
+        <div class="row">
+            <div class="col-md-4"><b>PO:</b> Akan dibuat otomatis</div>
+            <div class="col-md-4"><b>Outlet:</b> <span id="summaryOutlet">-</span></div>
+            <div class="col-md-4"><b>Type:</b> <span id="summaryType">-</span></div>
+        </div>
+
+    </div>
+
+    <div class="card-box" id="confirmDetail">
+
+        <div class="title">Product Detail</div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Qty</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody id="confirmItems"></tbody>
+        </table>
+
+        <div class="confirm-box">
+            <input type="checkbox" id="agree">
+            <label>Saya menyetujui pesanan ini untuk diproses.</label>
+        </div>
+
+        <button class="btn-main" onclick="submitOrder()">
+            Selesaikan Pesanan
+        </button>
+
+    </div>
+
+    <div class="card-box" id="historyBox" style="display:none;">
+        <div class="title">Order History & Payment</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>PO</th>
+                    <th>Date</th>
+                    <th>Total Item</th>
+                    <th>Status</th>
+                    <th>QT</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="historyRows"></tbody>
+        </table>
+    </div>
+
+</div>
+
+<!-- NOTIFICATION BOX -->
+<div id="notif" class="notif-box">
+    <i class="fas fa-check-circle"></i>
+    <span class="notif-text">
+        Pesanan berhasil dibuat, silakan cek di menu Order History untuk pengecekan ulang.
+    </span>
+</div>
+
+<script src="/pldios-api.js"></script>
+<script>
+
+let pendingOrder = null;
+let productsById = {};
+
+async function loadConfirmation(){
+    const context = await getDistributorContext();
+    if(!context) return;
+    applyDistributorIdentity(context);
+
+    pendingOrder = JSON.parse(localStorage.getItem("pldiosPendingOrder") || "null");
+
+    if(!pendingOrder){
+        showHistory(context.user);
+        return;
+    }
+
+    const productData = await apiRequest(`/api/products?distributorId=${pendingOrder.distributorId}`);
+    productsById = Object.fromEntries(productData.products.map((product) => [product.id, product]));
+
+    document.getElementById("summaryOutlet").textContent = pendingOrder.outlet;
+    document.getElementById("summaryType").textContent = pendingOrder.deliveryType;
+    document.getElementById("confirmItems").innerHTML = pendingOrder.items.map((item) => {
+        const product = productsById[item.productId];
+        const ok = product && product.remainingAllocation >= item.qty && product.stockStatus === "Ready";
+
+        return `
+            <tr>
+                <td>${product?.name || item.productId}</td>
+                <td>${item.qty}</td>
+                <td>${ok ? "OK" : "Tidak cukup"}</td>
+            </tr>
+        `;
+    }).join("");
+}
+
+async function showHistory(user){
+    document.getElementById("pageTitle").textContent = "Order History";
+    document.getElementById("confirmSummary").style.display = "none";
+    document.getElementById("confirmDetail").style.display = "none";
+    document.getElementById("historyBox").style.display = "block";
+
+    const data = await apiRequest(`/api/orders?role=${user.role}&userId=${user.id}`);
+    document.getElementById("historyRows").innerHTML = data.orders.map((order) => `
+        <tr>
+            <td>${order.poNumber}</td>
+            <td>${formatDate(order.orderDate)}</td>
+            <td>${order.totalItem} Item</td>
+            <td><span class="status ${statusClass(order.status)}">${statusLabel(order.status)}</span></td>
+            <td>${order.quotation ? `${order.quotation.fileName}<br>${formatCurrency(order.quotation.amount)}` : "Belum ada QT"}</td>
+            <td>
+                <button class="btn btn-sm btn-outline-primary" onclick="window.open('/po-pdf.html?orderId=${order.id}', '_blank')">Cetak PO</button>
+                ${order.status === "qt_uploaded" ? `<button class="btn btn-sm btn-outline-success" onclick="uploadPayment('${order.id}')">Upload Bayar</button>` : ""}
+            </td>
+        </tr>
+    `).join("");
+}
+
+async function uploadPayment(orderId){
+    const fileName = prompt("Nama file bukti bayar", `bukti-bayar-${orderId}.png`);
+    if(!fileName) return;
+
+    await apiRequest(`/api/orders/${orderId}/payment`, {
+        method: "POST",
+        body: JSON.stringify({ fileName }),
+    });
+
+    alert("Bukti bayar berhasil diupload. Menunggu verifikasi Admin Pertamina.");
+    showHistory(getStoredUser());
+}
+
+async function submitOrder(){
+
+    let check = document.getElementById("agree");
+
+    if(!check.checked){
+        alert("Harap centang persetujuan terlebih dahulu!");
+        return;
+    }
+
+    try{
+        await apiRequest("/api/orders", {
+            method: "POST",
+            body: JSON.stringify(pendingOrder),
+        });
+    }catch(error){
+        alert(error.message);
+        return;
+    }
+
+    localStorage.removeItem("pldiosPendingOrder");
+
+    let notif = document.getElementById("notif");
+
+    notif.style.display = "flex";
+
+    setTimeout(()=>{
+        notif.style.display = "none";
+        window.location.href = "/menu%20utama.html";
+    },4000);
+
+}
+
+loadConfirmation().catch((error) => alert(error.message));
+
+</script>
+
+</body>
+</html>

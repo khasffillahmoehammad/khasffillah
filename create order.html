@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PL-DIOS Create Order</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="/distributor-shell.css">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            font-family:'Segoe UI', sans-serif;
+            background:#f4f7fb;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar{
+
+            width:260px;
+            height:100vh;
+
+            position:fixed;
+            left:0;
+            top:0;
+
+            background:linear-gradient(
+                180deg,
+                #0046ad 0%,
+                #0066cc 20%,
+                #00a651 70%,
+                #008f6b 100%
+            );
+
+            background-size:400% 400%;
+            animation:sidebarMove 10s ease infinite;
+
+            color:white;
+            padding:25px 20px;
+            overflow-y:auto;
+            box-shadow:5px 0 25px rgba(0,0,0,0.15);
+
+        }
+
+        @keyframes sidebarMove{
+            0%{background-position:0% 50%;}
+            50%{background-position:100% 50%;}
+            100%{background-position:0% 50%;}
+        }
+
+        .logo{
+            text-align:center;
+            margin-bottom:40px;
+        }
+
+        .logo h2{
+            font-weight:800;
+            letter-spacing:2px;
+            margin-bottom:5px;
+            font-size:34px;
+        }
+
+        .logo p{
+            font-size:12px;
+            opacity:0.9;
+        }
+
+        .menu-title{
+            font-size:12px;
+            opacity:0.8;
+            margin-bottom:10px;
+            text-transform:uppercase;
+        }
+
+        .sidebar-menu{
+            list-style:none;
+            padding-left:0;
+        }
+
+        .sidebar-menu li{
+            margin-bottom:10px;
+        }
+
+        .sidebar-menu a{
+            display:flex;
+            align-items:center;
+            gap:12px;
+            text-decoration:none;
+            color:white;
+            padding:14px 16px;
+            border-radius:14px;
+            transition:0.3s;
+            font-weight:500;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu .active{
+            background:rgba(255,255,255,0.18);
+            backdrop-filter:blur(10px);
+            transform:translateX(4px);
+        }
+
+        /* MAIN CONTENT */
+
+        .main-content{
+            margin-left:260px;
+            padding:30px;
+        }
+
+        /* TOPBAR */
+
+        .topbar{
+            background:white;
+            padding:20px 25px;
+            border-radius:20px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            box-shadow:0 4px 20px rgba(0,0,0,0.05);
+            margin-bottom:30px;
+        }
+
+        .topbar h4{
+            margin-bottom:0;
+            font-weight:700;
+            color:#003366;
+        }
+
+        .user-box{
+            display:flex;
+            align-items:center;
+            gap:12px;
+        }
+
+        .user-box img{
+            width:45px;
+            height:45px;
+            border-radius:50%;
+        }
+
+        /* ORDER FORM */
+
+        .order-form{
+            background:white;
+            border-radius:20px;
+            padding:30px;
+            box-shadow:0 4px 20px rgba(0,0,0,0.05);
+            margin-bottom:30px;
+        }
+
+        .section-title{
+            font-size:22px;
+            font-weight:700;
+            color:#003366;
+            margin-bottom:25px;
+        }
+
+        .form-label{
+            font-weight:600;
+            margin-bottom:10px;
+        }
+
+        .form-control,
+        .form-select{
+            height:50px;
+            border-radius:14px;
+            border:1px solid #ddd;
+        }
+
+        .form-control:focus,
+        .form-select:focus{
+            border-color:#0046ad;
+            box-shadow:0 0 0 0.2rem rgba(0,70,173,0.15);
+        }
+
+        /* DELIVERY OPTION */
+
+        .delivery-box{
+            display:flex;
+            gap:20px;
+            flex-wrap:wrap;
+        }
+
+        .delivery-option{
+            flex:1;
+            min-width:220px;
+            background:#f8fafc;
+            border:2px solid transparent;
+            border-radius:18px;
+            padding:20px;
+            cursor:pointer;
+            transition:0.3s;
+        }
+
+        .delivery-option:hover{
+            border-color:#0046ad;
+        }
+
+        .delivery-option input{
+            margin-right:10px;
+        }
+
+        .delivery-option h5{
+            font-weight:700;
+            margin-bottom:8px;
+        }
+
+        .delivery-option p{
+            color:#777;
+            margin-bottom:0;
+            font-size:14px;
+        }
+
+        /* PRODUCT GRID */
+
+        .product-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
+            gap:25px;
+        }
+
+        .product-card{
+            background:white;
+            border-radius:20px;
+            padding:25px;
+            box-shadow:0 4px 20px rgba(0,0,0,0.05);
+            transition:0.3s;
+            position:relative;
+            overflow:hidden;
+        }
+
+        .product-card:hover{
+            transform:translateY(-5px);
+        }
+
+        .status-badge{
+            position:absolute;
+            top:20px;
+            right:20px;
+            padding:8px 14px;
+            border-radius:20px;
+            font-size:12px;
+            font-weight:700;
+        }
+
+        .available{
+            background:#d4edda;
+            color:#155724;
+        }
+
+        .empty{
+            background:#f8d7da;
+            color:#721c24;
+        }
+
+        .product-card h4{
+            font-weight:700;
+            color:#003366;
+            margin-bottom:10px;
+            padding-right:100px;
+        }
+
+        .category{
+            color:#777;
+            margin-bottom:20px;
+            font-size:14px;
+        }
+
+        .info-box{
+            background:#f8fafc;
+            border-radius:14px;
+            padding:14px;
+            margin-bottom:12px;
+            font-size:14px;
+        }
+
+        .info-box strong{
+            color:#003366;
+        }
+
+        .qty-input{
+            width:100%;
+            height:50px;
+            border-radius:14px;
+            border:1px solid #ddd;
+            padding-left:15px;
+            margin-top:10px;
+            font-size:14px;
+        }
+
+        .qty-input:focus{
+            border-color:#0046ad;
+            outline:none;
+            box-shadow:0 0 0 0.2rem rgba(0,70,173,0.15);
+        }
+
+        /* BUTTON */
+
+        .submit-area{
+            text-align:center;
+            margin-top:40px;
+        }
+
+        .btn-submit{
+            border:none;
+            padding:16px 35px;
+            border-radius:16px;
+            font-size:18px;
+            font-weight:700;
+            color:white;
+            background:linear-gradient(90deg,#0046ad,#00a651);
+            transition:0.3s;
+            cursor:pointer;
+        }
+
+        .btn-submit:hover{
+            transform:translateY(-3px);
+            box-shadow:0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        /* SEGMENT INFO */
+
+        .segment-info{
+            background:#eef4ff;
+            border-radius:10px;
+            padding:8px 12px;
+            font-size:13px;
+            color:#0046ad;
+            font-weight:600;
+            margin-bottom:10px;
+        }
+
+        @media(max-width:992px){
+            .sidebar{width:100%;height:auto;position:relative;}
+            .main-content{margin-left:0;}
+        }
+
+        @media(max-width:768px){
+            .topbar{flex-direction:column;gap:15px;align-items:flex-start;}
+            .product-grid{grid-template-columns:1fr;}
+        }
+
+    </style>
+
+</head>
+<body class="pldios-distributor">
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+    <div class="logo">
+        <h2>PL-DIOS</h2>
+        <p>Distributor Integrated Ordering System</p>
+    </div>
+
+    <div class="menu-title">Main Menu</div>
+
+    <ul class="sidebar-menu">
+        <li><a href="/menu%20utama.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+        <li><a href="/create%20order.html"><i class="fas fa-cart-plus"></i> Create Order</a></li>
+        <li><a href="/confirm%20order.html"><i class="fas fa-file-alt"></i> Order History</a></li>
+        <li><a href="/notifications.html"><i class="fas fa-bell"></i> Notifications</a></li>
+        <li><a href="/profile.html"><i class="fas fa-user"></i> Profile</a></li>
+        <li><a href="#" onclick="logout()"><i class="fas fa-right-from-bracket"></i> Logout</a></li>
+    </ul>
+
+</div>
+
+<!-- MAIN CONTENT -->
+
+<div class="main-content">
+
+    <!-- TOPBAR -->
+
+    <div class="topbar">
+        <div>
+            <h4>Create New Order</h4>
+            <p class="mb-0 text-muted">PT Pertamina Lubricants Distributor Portal</p>
+        </div>
+        <div class="user-box">
+            <img src="https://i.pravatar.cc/100" alt="User">
+            <div>
+                <strong id="userName">Distributor User</strong>
+                <div class="text-muted small"><span id="userArea">Medan Area</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ORDER FORM -->
+
+    <div class="order-form">
+
+        <div class="section-title">Order Information</div>
+
+        <div class="row g-4">
+
+            <!-- TERRITORY -->
+            <div class="col-md-6">
+                <label class="form-label">Territory</label>
+                <select class="form-select" id="territorySelect"></select>
+            </div>
+
+            <!-- SEGMEN -->
+            <div class="col-md-6">
+                <label class="form-label">Segmen</label>
+                <select class="form-select" id="segmentSelect">
+                    <option value="retail">Retail</option>
+                    <option value="industri">Industri</option>
+                    <option value="kam">KAM</option>
+                </select>
+            </div>
+
+            <!-- NAMA CUSTOMER -->
+            <div class="col-md-6">
+                <label class="form-label">Nama Customer</label>
+                <input class="form-control" id="customerName" placeholder="Contoh: Toko Maju Jaya">
+            </div>
+
+            <!-- CUSTOMER ID -->
+            <div class="col-md-6">
+                <label class="form-label">Customer ID</label>
+                <input class="form-control" id="customerId" placeholder="Contoh: CUST-001">
+            </div>
+
+            <!-- KODE PO -->
+            <div class="col-md-6">
+                <label class="form-label">Kode PO (Eksternal)</label>
+                <input class="form-control" id="poCode" placeholder="Contoh: EXT-PO-2026-001">
+            </div>
+
+            <!-- DATE -->
+            <div class="col-md-6">
+                <label class="form-label">Order Date & Time</label>
+                <input type="datetime-local" class="form-control" id="orderDate" readonly>
+            </div>
+
+            <!-- PAYMENT METHOD -->
+            <div class="col-md-6">
+                <label class="form-label">Metode Pembayaran</label>
+                <select class="form-select" id="paymentMethod">
+                    <option value="Cash">Cash</option>
+                    <option value="Bank Garansi">Bank Garansi</option>
+                    <option value="Distributor Financing">Distributor Financing</option>
+                </select>
+            </div>
+
+            <!-- DELIVERY -->
+            <div class="col-md-6">
+                <label class="form-label">Delivery Type</label>
+                <div class="delivery-box">
+                    <label class="delivery-option">
+                        <input type="radio" name="delivery" value="Loco" checked>
+                        <h5>Loco</h5>
+                        <p>Ambil sendiri di DSP</p>
+                    </label>
+                    <label class="delivery-option">
+                        <input type="radio" name="delivery" value="Franco">
+                        <h5>Franco</h5>
+                        <p>Barang diantar langsung</p>
+                    </label>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- PRODUCT -->
+
+    <div class="section-title">Product List</div>
+
+    <div class="product-grid" id="productGrid">
+        <div class="text-muted">Memuat produk...</div>
+    </div>
+
+    <!-- BUTTON -->
+
+    <div class="submit-area">
+        <button class="btn-submit" id="confirmOrderBtn">
+            <i class="fas fa-paper-plane"></i>
+            Confirm Order
+        </button>
+    </div>
+
+</div>
+
+<script src="/pldios-api.js"></script>
+<script>
+
+const distributorTerritories = {
+    "PT. SUTAN KASIM": ["TERRITORY ACEH BARAT"],
+    "PT. NUSANTARA INDO BERJAYA": ["TERRITORY ACEH SELATAN"],
+    "PT. CITRA BINTANG FAMILINDO": ["TERRITORY ACEH TIMUR TENGAH"],
+    "PT. SUKA MELAJU": ["TERRITORY AGAM"],
+    "PT. POLA RAYA JAYA SAKTI": ["TERRITORY ASAHAN","TERRITORY MEDAN TENGGARA","TERRITORY SIMALUNGUN"],
+    "PT. KANDE AGUNG": ["TERRITORY BANDA ACEH"],
+    "PT. RUSEL VICTORY NUSANTARA": ["TERRITORY BATAM I"],
+    "PT. MAHARDHIKA CIPTA NUSA": ["TERRITORY BATAM II","TERRITORY TANJUNG PINANG"],
+    "PT. SAMUDRA JAYA RAYA": ["TERRITORY BINJAI LANGKAT"],
+    "PT. DELIMA TRI SAKTI": ["TERRITORY BUKIT TINGGI","TERRITORY SOLOK"],
+    "PT. PEMBINA CITRA UTAMARAYA": ["TERRITORY DHARMASRAYA","TERRITORY PADANG 3"],
+    "PT. MAJU JAYA LUBRICANTS": ["TERRITORY DUMAI","TERRITORY ROHIL"],
+    "PT. NAPCO": ["TERRITORY INDRAGIRI","TERRITORY PEKANBARU 1"],
+    "PT. RIAU MANDIRI EKA SAKTI": ["TERRITORY KAMPAR 1","TERRITORY PEKANBARU 3"],
+    "PT. PUTRA BANGGA KIRANA": ["TERRITORY KARO"],
+    "PT. SERDANG JAYA": ["TERRITORY LABUHAN BATU","TERRITORY MEDAN UTARA"],
+    "PT. LARIS SUMUT MAKMUR": ["TERRITORY MEDAN SELATAN"],
+    "PT. TETEN GAZALI": ["TERRITORY PADANG 4"],
+    "PT. SUMBAR SURYA SEJATI": ["TERRITORY PADANG 5"],
+    "PT. SUKSES RIAU PERMATA": ["TERRITORY PEKANBARU 2"],
+    "PT. INDRA ANGKOLA LUB": ["TERRITORY TAPANULI SELATAN"],
+    "PT. EKA PRIMA SEMESTA": ["TERRITORY TEBING TINGGI"]
+};
+
+let productsCache = [];
+
+function loadTerritories(distributorName){
+    const select = document.getElementById("territorySelect");
+    const key = Object.keys(distributorTerritories).find(k =>
+        k.toUpperCase() === (distributorName || "").toUpperCase()
+    );
+    const territories = key ? distributorTerritories[key] : [];
+    if(!territories.length){
+        select.innerHTML = `<option value="">Tidak ada territory terdaftar</option>`;
+        return;
+    }
+    select.innerHTML = territories.map(t => `<option value="${t}">${t}</option>`).join("");
+}
+
+function getSegmentData(product, segment){
+    if(segment === "retail"){
+        const alloc = Number(product.retailAllocation ?? product.remainingAllocation ?? 0);
+        const used = Number(product.retailUsed ?? 0);
+        return { alloc, remaining: Math.max(alloc - used, 0) };
+    }
+    if(segment === "industri"){
+        const alloc = Number(product.industriAllocation ?? 0);
+        const used = Number(product.industriUsed ?? 0);
+        return { alloc, remaining: Math.max(alloc - used, 0) };
+    }
+    if(segment === "kam"){
+        const alloc = Number(product.kamAllocation ?? 0);
+        const used = Number(product.kamUsed ?? 0);
+        return { alloc, remaining: Math.max(alloc - used, 0) };
+    }
+    return { alloc: 0, remaining: 0 };
+}
+
+function renderProducts(products){
+    const segment = document.getElementById("segmentSelect").value;
+    const segLabel = segment.charAt(0).toUpperCase() + segment.slice(1);
+
+    document.getElementById("productGrid").innerHTML = products.map(product => {
+        const seg = getSegmentData(product, segment);
+        const retail = getSegmentData(product, "retail");
+        const industri = getSegmentData(product, "industri");
+        const available = product.stockStatus === "Ready" && seg.remaining > 0;
+
+        return `
+            <div class="product-card">
+                <span class="status-badge ${available ? "available" : "empty"}">
+                    ${available ? "Available" : "Out Of Stock"}
+                </span>
+                <h4>${product.name}</h4>
+                <div class="category">${product.category}</div>
+
+                <div class="info-box">
+                    <strong>Alokasi Retail:</strong> ${retail.remaining} / ${retail.alloc} Dus
+                </div>
+                <div class="info-box">
+                    <strong>Alokasi Industri:</strong> ${industri.remaining} / ${industri.alloc} Dus
+                </div>
+                <div class="info-box">
+                    <strong>Stock Status:</strong> ${product.stockStatus}
+                </div>
+
+                <div class="segment-info">
+                    <i class="fas fa-tag me-1"></i>
+                    Segmen ${segLabel} — Sisa Alokasi: ${seg.remaining} Dus
+                </div>
+
+                <input
+                    type="number"
+                    class="qty-input"
+                    data-product-id="${product.id}"
+                    data-product-name="${product.name}"
+                    min="0"
+                    max="${seg.remaining}"
+                    placeholder="Input Qty Order (Dus)"
+                    ${available ? "" : "disabled"}
+                >
+            </div>
+        `;
+    }).join("");
+}
+
+async function loadCreateOrder(){
+    const context = await getDistributorContext();
+    if(!context) return;
+    applyDistributorIdentity(context);
+    loadTerritories(context.user.name);
+    document.getElementById("orderDate").value = new Date().toISOString().slice(0, 16);
+
+    if(!context.complete){
+        alert("Lengkapi profil distributor dulu sebelum membuat PO.");
+        window.location.href = "/profile.html";
+        return;
+    }
+
+    const data = await apiRequest(`/api/products?distributorId=${context.user.id}`);
+    productsCache = data.products;
+    renderProducts(productsCache);
+}
+
+document.getElementById("segmentSelect").addEventListener("change", () => {
+    renderProducts(productsCache);
+});
+
+document.getElementById("confirmOrderBtn").addEventListener("click", function(){
+    const user = getStoredUser();
+    const territory = document.getElementById("territorySelect").value;
+    const segment = document.getElementById("segmentSelect").value;
+    const customerName = document.getElementById("customerName").value.trim();
+    const customerId = document.getElementById("customerId").value.trim();
+    const poCode = document.getElementById("poCode").value.trim();
+    const paymentMethod = document.getElementById("paymentMethod").value;
+    const deliveryType = document.querySelector("input[name='delivery']:checked").value;
+
+    if(!territory){ alert("Pilih territory terlebih dahulu."); return; }
+    if(!customerName){ alert("Isi nama customer terlebih dahulu."); return; }
+
+    const items = Array.from(document.querySelectorAll(".qty-input"))
+        .map(input => ({
+            productId: input.dataset.productId,
+            productName: input.dataset.productName,
+            qty: Number(input.value || 0),
+            allocationType: segment,
+        }))
+        .filter(item => item.qty > 0);
+
+    if(items.length === 0){ alert("Isi minimal satu qty produk terlebih dahulu."); return; }
+
+    localStorage.setItem("pldiosPendingOrder", JSON.stringify({
+        distributorId: user?.id,
+        territory,
+        segment,
+        customerName,
+        customerId,
+        poCode,
+        paymentMethod,
+        outlet: document.getElementById("userName").textContent || user?.name,
+        deliveryType,
+        items,
+    }));
+
+    window.location.href = "/confirm%20order.html";
+});
+
+loadCreateOrder().catch(err => alert(err.message));
+
+</script>
+</body>
+</html>

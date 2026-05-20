@@ -1,0 +1,210 @@
+{
+  "users": [
+    {
+      "id": "master-001",
+      "name": "MASTER PL-DIOS",
+      "email": "master@pldios.local",
+      "password": "password123",
+      "role": "master",
+      "area": "Head Office"
+    },
+    {
+      "id": "admin-001",
+      "name": "ADMIN PERTAMINA",
+      "email": "admin@pldios.local",
+      "password": "password123",
+      "role": "admin_pertamina",
+      "area": "Pertamina Lubricants"
+    },
+    {
+      "id": "sam-retail-001",
+      "name": "SAM RETAIL",
+      "email": "samretail@pldios.local",
+      "password": "password123",
+      "role": "sam_retail",
+      "area": "Sales Region I"
+    },
+    {
+      "id": "sam-industri-001",
+      "name": "SAM INDUSTRI",
+      "email": "samindustri@pldios.local",
+      "password": "password123",
+      "role": "sam_industri",
+      "area": "Sales Region I"
+    },
+    {
+      "id": "dist-001",
+      "name": "PT. SUTAN KASIM",
+      "email": "sutankasim@pldios.local",
+      "password": "password123",
+      "role": "distributor",
+      "area": "TERRITORY ACEH BARAT",
+      "territories": ["TERRITORY ACEH BARAT", "TERRITORY INDUSTRI"]
+    },
+    {
+      "id": "dist-002",
+      "name": "PT. NUSANTARA INDO BERJAYA",
+      "email": "nusantaraindoberjaya@pldios.local",
+      "password": "password123",
+      "role": "distributor",
+      "area": "TERRITORY ACEH SELATAN",
+      "territories": ["TERRITORY ACEH SELATAN", "TERRITORY INDUSTRI"]
+    },
+    {
+      "id": "dist-003",
+      "name": "PT. CITRA BINTANG FAMILINDO",
+      "email": "citrabintangfamilindo@pldios.local",
+      "password": "password123",
+      "role": "distributor",
+      "area": "TERRITORY ACEH TIMUR TENGAH",
+      "territories": ["TERRITORY ACEH TIMUR TENGAH", "TERRITORY INDUSTRI"]
+    },
+    {
+      "id": "dist-005",
+      "name": "PT. POLA RAYA JAYA SAKTI",
+      "email": "polarayajayasakti@pldios.local",
+      "password": "password123",
+      "role": "distributor",
+      "area": "TERRITORY ASAHAN",
+      "territories": ["TERRITORY ASAHAN", "TERRITORY MEDAN TENGGARA", "TERRITORY SIMALUNGUN", "TERRITORY INDUSTRI"]
+    },
+    {
+      "id": "dist-006",
+      "name": "PT. KANDE AGUNG",
+      "email": "kandeagung@pldios.local",
+      "password": "password123",
+      "role": "distributor",
+      "area": "TERRITORY BANDA ACEH",
+      "territories": ["TERRITORY BANDA ACEH", "TERRITORY INDUSTRI"]
+    },
+    {
+      "id": "dist-009",
+      "name": "PT. SAMUDRA JAYA RAYA",
+      "email": "samudrajayaraya@pldios.local",
+      "password": "password123",
+      "role": "distributor",
+      "area": "TERRITORY BINJAI LANGKAT",
+      "territories": ["TERRITORY BINJAI LANGKAT", "TERRITORY INDUSTRI"]
+    },
+    {
+      "id": "dist-015",
+      "name": "PT. PUTRA BANGGA KIRANA",
+      "email": "putrabanggakirana@pldios.local",
+      "password": "password123",
+      "role": "distributor",
+      "area": "TERRITORY KARO",
+      "territories": ["TERRITORY KARO", "TERRITORY INDUSTRI"]
+    },
+    {
+      "id": "dist-016",
+      "name": "PT. SERDANG JAYA",
+      "email": "serdangjaya@pldios.local",
+      "password": "password123",
+      "role": "distributor",
+      "area": "TERRITORY LABUHAN BATU",
+      "territories": ["TERRITORY LABUHAN BATU", "TERRITORY MEDAN UTARA", "TERRITORY INDUSTRI"]
+    },
+    {
+      "id": "dist-017",
+      "name": "PT. LARIS SUMUT MAKMUR",
+      "email": "larissumutmakmur@pldios.local",
+      "password": "password123",
+      "role": "distributor",
+      "area": "TERRITORY MEDAN SELATAN",
+      "territories": ["TERRITORY MEDAN SELATAN", "TERRITORY INDUSTRI"]
+    },
+    {
+      "id": "dist-021",
+      "name": "PT. INDRA ANGKOLA LUB",
+      "email": "indraangkolalub@pldios.local",
+      "password": "password123",
+      "role": "distributor",
+      "area": "TERRITORY TAPANULI SELATAN",
+      "territories": ["TERRITORY TAPANULI SELATAN", "TERRITORY INDUSTRI"]
+    },
+    {
+      "id": "dist-022",
+      "name": "PT. EKA PRIMA SEMESTA",
+      "email": "ekaprimasemesta@pldios.local",
+      "password": "password123",
+      "role": "distributor",
+      "area": "TERRITORY TEBING TINGGI",
+      "territories": ["TERRITORY TEBING TINGGI", "TERRITORY INDUSTRI"]
+    },
+    {
+      "id": "dist-023",
+      "name": "PT. ARTA CIMANDIRI CEMERLANG",
+      "email": "artacimandiri@pldios.local",
+      "password": "password123",
+      "role": "distributor",
+      "area": "TERRITORY INDUSTRI",
+      "territories": ["TERRITORY INDUSTRI"]
+    },
+    {
+      "id": "dist-024",
+      "name": "PT POLA PELUMAS JAYA SAKTI",
+      "email": "polapelumas@pldios.local",
+      "password": "password123",
+      "role": "distributor",
+      "area": "TERRITORY INDUSTRI",
+      "territories": ["TERRITORY INDUSTRI"]
+    },
+    {
+      "id": "dist-025",
+      "name": "PT. LUBSINDOCIPTA BINAWARSA",
+      "email": "lubsindocipta@pldios.local",
+      "password": "password123",
+      "role": "distributor",
+      "area": "TERRITORY INDUSTRI",
+      "territories": ["TERRITORY INDUSTRI"]
+    }
+  ],
+  "roles": [
+    { "id": "master", "name": "Master", "description": "Mengelola seluruh fitur dan role." },
+    { "id": "admin_pertamina", "name": "Admin Pertamina Lubricants", "description": "Mengelola stok, alokasi, PO distributor, dan upload QT." },
+    { "id": "distributor", "name": "Distributor", "description": "Mengelola profil, membuat PO, dan upload bukti bayar." },
+    { "id": "sam_retail", "name": "SAM Retail", "description": "Melihat dashboard penjualan segmen retail per distributor & territory." },
+    { "id": "sam_industri", "name": "SAM Industri", "description": "Melihat dashboard penjualan segmen industri per distributor & territory." }
+  ],
+  "distributorProfiles": [],
+  "products": [],
+  "allocations": [],
+  "stockIns": [],
+  "stockAdjustments": [],
+  "orders": [
+    {
+      "id": "order-seed-001",
+      "distributorId": "dist-005",
+      "poNumber": "PO-2026-001",
+      "orderDate": "2026-05-18T09:15:00.000Z",
+      "outlet": "PT Pola Raya Jaya Sakti",
+      "territory": "TERRITORY ASAHAN",
+      "segment": "retail",
+      "deliveryType": "Franco",
+      "status": "qt_uploaded",
+      "items": [
+        { "productId": "A070114518", "productName": "Enduro Matic S 10W-30", "qty": 10, "allocationType": "retail" },
+        { "productId": "A070113218", "productName": "Enduro Matic 6x1L", "qty": 4, "allocationType": "retail" }
+      ],
+      "quotation": { "fileName": "QT-PO-2026-001.pdf", "amount": 12850000, "notes": "QT sudah diterbitkan.", "uploadedAt": "2026-05-18T10:20:00.000Z" },
+      "paymentProof": null
+    }
+  ],
+  "territories": {
+    "TERRITORY ACEH BARAT": ["PT. SUTAN KASIM"],
+    "TERRITORY ACEH SELATAN": ["PT. NUSANTARA INDO BERJAYA"],
+    "TERRITORY ACEH TIMUR TENGAH": ["PT. CITRA BINTANG FAMILINDO"],
+    "TERRITORY ASAHAN": ["PT. POLA RAYA JAYA SAKTI"],
+    "TERRITORY BANDA ACEH": ["PT. KANDE AGUNG"],
+    "TERRITORY BINJAI LANGKAT": ["PT. SAMUDRA JAYA RAYA"],
+    "TERRITORY KARO": ["PT. PUTRA BANGGA KIRANA"],
+    "TERRITORY LABUHAN BATU": ["PT. SERDANG JAYA"],
+    "TERRITORY MEDAN SELATAN": ["PT. LARIS SUMUT MAKMUR"],
+    "TERRITORY MEDAN TENGGARA": ["PT. POLA RAYA JAYA SAKTI"],
+    "TERRITORY MEDAN UTARA": ["PT. SERDANG JAYA"],
+    "TERRITORY SIMALUNGUN": ["PT. POLA RAYA JAYA SAKTI"],
+    "TERRITORY TAPANULI SELATAN": ["PT. INDRA ANGKOLA LUB"],
+    "TERRITORY TEBING TINGGI": ["PT. EKA PRIMA SEMESTA"],
+    "TERRITORY INDUSTRI": ["PT. SUTAN KASIM","PT. NUSANTARA INDO BERJAYA","PT. CITRA BINTANG FAMILINDO","PT. POLA RAYA JAYA SAKTI","PT. KANDE AGUNG","PT. SAMUDRA JAYA RAYA","PT. PUTRA BANGGA KIRANA","PT. SERDANG JAYA","PT. LARIS SUMUT MAKMUR","PT. INDRA ANGKOLA LUB","PT. EKA PRIMA SEMESTA","PT. ARTA CIMANDIRI CEMERLANG","PT POLA PELUMAS JAYA SAKTI","PT. LUBSINDOCIPTA BINAWARSA"]
+  }
+}

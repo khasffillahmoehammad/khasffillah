@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PL-DIOS | Master</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#f0f4f9}
+.shell{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+.sidebar{background:linear-gradient(180deg,#0046ad 0%,#0066cc 40%,#00a651 100%);color:white;padding:25px 20px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.logo{text-align:center;margin-bottom:32px}.logo h2{font-size:32px;font-weight:800;letter-spacing:2px}.logo p{font-size:11px;opacity:.85}
+.menu-title{font-size:11px;opacity:.7;text-transform:uppercase;margin:16px 0 8px;letter-spacing:.5px}
+.sidebar a{display:flex;align-items:center;gap:12px;color:white;text-decoration:none;padding:13px 16px;border-radius:12px;margin-bottom:6px;font-weight:500;font-size:14px;transition:.2s}
+.sidebar a:hover,.sidebar a.active{background:rgba(255,255,255,.18);transform:translateX(3px)}
+.sidebar a i{width:18px;text-align:center}
+.main{padding:28px}.topbar,.card-box{background:#fff;border-radius:16px;padding:22px;box-shadow:0 2px 16px rgba(0,0,0,.06);margin-bottom:22px}
+.topbar{display:flex;justify-content:space-between;align-items:center}.topbar h3{color:#003366;font-weight:800;margin:0;font-size:18px}
+.view{display:none}.view.active{display:block}
+.summary-card{background:#fff;border-radius:16px;padding:22px;box-shadow:0 2px 16px rgba(0,0,0,.06);height:100%}
+.summary-card .icon{width:50px;height:50px;border-radius:14px;color:white;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:14px}
+.bg-blue{background:#0046ad}.bg-green{background:#00a651}.bg-orange{background:#ff9800}.bg-red{background:#e31e24}.bg-purple{background:#7c3aed}
+.summary-card h3{font-weight:800;margin:0;color:#1f2937;font-size:24px}.summary-card p{margin:4px 0 0;color:#667085;font-size:13px}
+.btn-main{border:none;border-radius:10px;background:linear-gradient(90deg,#0046ad,#00a651);color:white;font-weight:700;padding:10px 16px;font-size:13px;cursor:pointer;transition:.2s}
+.btn-main:hover{opacity:.88;transform:translateY(-1px)}
+.form-control,.form-select{border-radius:10px;min-height:42px;font-size:14px;border:1px solid #e2e8f0}
+.form-control:focus,.form-select:focus{border-color:#0046ad;box-shadow:0 0 0 3px rgba(0,70,173,.12)}
+.status{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:700;display:inline-block}
+.pending{background:#fff3cd;color:#856404}.approved{background:#d4edda;color:#155724}.process{background:#cce5ff;color:#004085}
+.pill{display:inline-block;padding:5px 10px;border-radius:20px;background:#eef4ff;color:#0046ad;font-weight:700;font-size:12px}
+.badge-retail{background:#d4edda;color:#155724;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700}
+.badge-industry{background:#cce5ff;color:#004085;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700}
+.filter-bar{background:#f8fafc;border-radius:12px;padding:14px 16px;margin-bottom:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.filter-bar input,.filter-bar select{border-radius:9px;border:1px solid #e2e8f0;padding:8px 12px;font-size:13px;min-height:38px}
+table{width:100%}.table th{background:#f8fafc;font-size:12px;color:#667085;font-weight:700;padding:10px 12px;border-bottom:1px solid #eef2f7}
+.table td{padding:10px 12px;border-bottom:1px solid #f5f7fa;font-size:13px;vertical-align:middle}
+.table tr:hover td{background:#fafbff}
+.stock-in-input{width:80px;border-radius:8px;border:1px solid #e2e8f0;padding:6px 8px;text-align:center;font-size:13px}
+.stock-in-input:focus{border-color:#0046ad;outline:none}
+.alloc-select{border-radius:9px;border:1px solid #e2e8f0;padding:8px 12px;font-size:13px;background:#fff;min-width:180px}
+.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.section-header h5{font-weight:700;color:#003366;margin:0}
+@media(max-width:900px){.shell{grid-template-columns:1fr}.sidebar{position:relative;height:auto;width:100%}.topbar{flex-direction:column;gap:10px}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="logo"><h2>PL-DIOS</h2><p>Master Control</p></div>
+    <div class="menu-title">Main Menu</div>
+    <a href="#" data-view="dashboard"><i class="fas fa-chart-line"></i> Dashboard</a>
+    <a href="#" data-view="users"><i class="fas fa-users-gear"></i> User & Role</a>
+    <a href="#" data-view="stockin"><i class="fas fa-boxes-stacking"></i> Stock In</a>
+    <a href="#" data-view="alokasi"><i class="fas fa-sliders"></i> Alokasi Stok</a>
+    <a href="#" data-view="adjustment"><i class="fas fa-scissors"></i> Stock Adjustment</a>
+    <a href="#" data-view="orders"><i class="fas fa-file-invoice"></i> Global PO</a>
+    <a href="#" onclick="logout()"><i class="fas fa-right-from-bracket"></i> Logout</a>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div><h3 id="pageTitle">Dashboard</h3><p class="text-muted mb-0 mt-1" id="pageSubtitle" style="font-size:13px">Super admin untuk seluruh data PL-DIOS.</p></div>
+      <strong id="masterName" style="color:#003366">Master</strong>
+    </div>
+
+    <!-- DASHBOARD -->
+    <section id="dashboardView" class="view active">
+      <div class="row g-3 mb-4" id="summary"></div>
+      <div class="card-box">
+        <div class="section-header"><h5>Recent Global PO</h5></div>
+        <div class="table-responsive"><table class="table"><thead><tr><th>PO Number</th><th>Distributor</th><th>Territory</th><th>Tanggal</th><th>Status</th><th>Total Item</th></tr></thead><tbody id="recentRows"></tbody></table></div>
+      </div>
+    </section>
+
+    <!-- USER & ROLE -->
+    <section id="usersView" class="view">
+      <div class="row g-4">
+        <div class="col-lg-4">
+          <div class="card-box">
+            <h5 class="fw-bold mb-3" style="color:#003366">Tambah User</h5>
+            <form id="userForm">
+              <label class="form-label fw-semibold">Nama</label>
+              <input class="form-control mb-3" id="newUserName" required>
+              <label class="form-label fw-semibold">Email</label>
+              <input class="form-control mb-3" id="newUserEmail" type="email" required>
+              <label class="form-label fw-semibold">Role</label>
+              <select class="form-select mb-3" id="newUserRole">
+                <option value="distributor">Distributor</option>
+                <option value="admin_pertamina">Admin Pertamina</option>
+                <option value="sam_retail">SAM Retail</option>
+                <option value="sam_industri">SAM Industri</option>
+                <option value="master">Master</option>
+              </select>
+              <label class="form-label fw-semibold">Area / Territory</label>
+              <input class="form-control mb-3" id="newUserArea">
+              <label class="form-label fw-semibold">Nama Distributor <span class="text-muted">(jika distributor)</span></label>
+              <input class="form-control mb-3" id="newDistributorName">
+              <label class="form-label fw-semibold">Alamat <span class="text-muted">(jika distributor)</span></label>
+              <input class="form-control mb-3" id="newDistributorAddress">
+              <button class="btn-main w-100" type="submit"><i class="fas fa-user-plus me-2"></i>Tambah User</button>
+            </form>
+          </div>
+        </div>
+        <div class="col-lg-8">
+          <div class="card-box">
+            <div class="section-header"><h5>Daftar User</h5></div>
+            <div class="table-responsive"><table class="table"><thead><tr><th>Nama</th><th>Email</th><th>Role</th><th>Area</th></tr></thead><tbody id="userRows"></tbody></table></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STOCK IN -->
+    <section id="stockinView" class="view">
+      <div class="card-box">
+        <div class="section-header">
+          <h5>Input Stock In</h5>
+          <div class="filter-bar" style="margin:0">
+            <input type="text" id="siSearch" placeholder="Cari produk / kode..." oninput="filterStockIn()">
+            <select id="siSegment" onchange="filterStockIn()">
+              <option value="">Semua Segment</option>
+              <option value="RETAIL">Retail</option>
+              <option value="INDUSTRY">Industry</option>
+            </select>
+          </div>
+        </div>
+        <p class="text-muted mb-3" style="font-size:13px">Isi kolom <strong>Stock In</strong> lalu klik Simpan. Stok akan otomatis diperbarui.</p>
+        <div class="table-responsive">
+          <table class="table" id="stockInTable">
+            <thead><tr><th>Kode Produk</th><th>Nama Produk</th><th>UOM</th><th>Volume</th><th>Segment</th><th>Stok Saat Ini</th><th>Stock In</th></tr></thead>
+            <tbody id="stockInRows"></tbody>
+          </table>
+        </div>
+        <button class="btn-main mt-3" onclick="saveStockIn()"><i class="fas fa-save me-2"></i>Simpan Stock In</button>
+      </div>
+    </section>
+
+    <!-- ALOKASI STOK -->
+    <section id="alokasiView" class="view">
+      <div class="card-box mb-3">
+        <h5 class="fw-bold mb-3" style="color:#003366">Pilih Distributor & Territory</h5>
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">Nama Distributor</label>
+            <select class="form-select" id="alokasiDist" onchange="loadAlokasiTerritory()">
+              <option value="">-- Pilih Distributor --</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">Territory</label>
+            <select class="form-select" id="alokasiTerr">
+              <option value="">-- Pilih Territory --</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <label class="form-label fw-semibold">Segment</label>
+            <select class="form-select" id="alokasiSegment">
+              <option value="retail">Retail</option>
+              <option value="industri">Industri</option>
+            </select>
+          </div>
+          <div class="col-md-2 d-flex align-items-end">
+            <button class="btn-main w-100" onclick="loadAlokasiProduk()"><i class="fas fa-search me-1"></i>Tampilkan</button>
+          </div>
+        </div>
+      </div>
+      <div class="card-box" id="alokasiProdukBox" style="display:none">
+        <div class="section-header">
+          <h5>Input Alokasi Produk</h5>
+          <div class="filter-bar" style="margin:0">
+            <input type="text" id="alokasiSearch" placeholder="Cari produk / kode..." oninput="filterAlokasi()">
+            <select id="alokasiSegFilter" onchange="filterAlokasi()">
+              <option value="">Semua Segment</option>
+              <option value="RETAIL">Retail</option>
+              <option value="INDUSTRY">Industry</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table" id="alokasiTable">
+            <thead><tr><th>Kode Produk</th><th>Nama Produk</th><th>UOM</th><th>Volume</th><th>Stok Global</th><th>Alokasi (Dus)</th></tr></thead>
+            <tbody id="alokasiRows"></tbody>
+          </table>
+        </div>
+        <button class="btn-main mt-3" onclick="saveAlokasi()"><i class="fas fa-save me-2"></i>Simpan Alokasi</button>
+      </div>
+    </section>
+
+    <!-- STOCK ADJUSTMENT -->
+    <section id="adjustmentView" class="view">
+      <div class="card-box mb-3">
+        <h5 class="fw-bold mb-3" style="color:#003366">Pilih Distributor & Customer</h5>
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">Distributor</label>
+            <select class="form-select" id="adjDist" onchange="loadAdjTerritory()">
+              <option value="">-- Pilih Distributor --</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-semibold">Territory</label>
+            <select class="form-select" id="adjTerr">
+              <option value="">-- Pilih Territory --</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-semibold">Nama Customer</label>
+            <input class="form-control" id="adjCustomer" placeholder="Nama customer">
+          </div>
+          <div class="col-md-2 d-flex align-items-end">
+            <button class="btn-main w-100" onclick="loadAdjProduk()"><i class="fas fa-search me-1"></i>Tampilkan</button>
+          </div>
+        </div>
+      </div>
+      <div class="card-box" id="adjProdukBox" style="display:none">
+        <div class="section-header"><h5 id="adjProdukTitle">Sisa Alokasi & Adjustment</h5></div>
+        <div class="table-responsive">
+          <table class="table">
+            <thead><tr><th>Kode</th><th>Nama Produk</th><th>Segment</th><th>Alokasi</th><th>Terpakai</th><th>Sisa</th><th>Qty Potong</th></tr></thead>
+            <tbody id="adjRows"></tbody>
+          </table>
+        </div>
+        <button class="btn-main mt-3" onclick="saveAdjustment()"><i class="fas fa-scissors me-2"></i>Simpan Adjustment</button>
+      </div>
+    </section>
+
+    <!-- GLOBAL PO -->
+    <section id="ordersView" class="view">
+      <div class="card-box">
+        <div class="section-header"><h5>Global PO</h5></div>
+        <div class="table-responsive"><table class="table"><thead><tr><th>PO</th><th>Distributor</th><th>Territory</th><th>Tanggal</th><th>Status</th><th>Item</th><th>QT</th></tr></thead><tbody id="orderRows"></tbody></table></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="/pldios-api.js"></script>
+<script>
+let masterData = null;
+let catalogData = [];
+let currentProducts = [];
+
+function ensureMaster(){
+  const user = requireLogin();
+  if(!user) return null;
+  if(user.role !== "master"){ alert("Halaman ini hanya untuk Master."); redirectByRole(user); return null; }
+  document.getElementById("masterName").textContent = user.name;
+  return user;
+}
+
+function switchView(view){
+  const titles = {
+    dashboard:["Dashboard","Super admin untuk seluruh data PL-DIOS."],
+    users:["User & Role","Tambah user baru dan kelola role."],
+    stockin:["Stock In","Input penambahan stok produk baru."],
+    alokasi:["Alokasi Stok","Input alokasi stok per distributor, territory, dan segment."],
+    adjustment:["Stock Adjustment","Potong alokasi distributor untuk penjualan khusus."],
+    orders:["Global PO","Monitor semua PO distributor."],
+  };
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+  document.getElementById(`${view}View`).classList.add("active");
+  document.querySelectorAll(".sidebar a[data-view]").forEach(a => a.classList.toggle("active", a.dataset.view === view));
+  document.getElementById("pageTitle").textContent = titles[view][0];
+  document.getElementById("pageSubtitle").textContent = titles[view][1];
+}
+
+async function loadMaster(){
+  if(!ensureMaster()) return;
+  [masterData, {catalog: catalogData}] = await Promise.all([
+    apiRequest("/api/master"),
+    apiRequest("/api/catalog"),
+  ]);
+  currentProducts = masterData.products;
+  renderMaster();
+  populateDistributorDropdowns();
+}
+
+function renderMaster(){
+  document.getElementById("summary").innerHTML = `
+    <div class="col-lg-3 col-md-6"><div class="summary-card"><div class="icon bg-blue"><i class="fas fa-users"></i></div><h3>${masterData.users.length}</h3><p>Total User</p></div></div>
+    <div class="col-lg-3 col-md-6"><div class="summary-card"><div class="icon bg-orange"><i class="fas fa-oil-can"></i></div><h3>${masterData.products.length}</h3><p>Produk Aktif</p></div></div>
+    <div class="col-lg-3 col-md-6"><div class="summary-card"><div class="icon bg-green"><i class="fas fa-file-invoice"></i></div><h3>${masterData.orders.length}</h3><p>Total PO</p></div></div>
+    <div class="col-lg-3 col-md-6"><div class="summary-card"><div class="icon bg-purple"><i class="fas fa-sliders"></i></div><h3>${masterData.allocations.length}</h3><p>Alokasi Aktif</p></div></div>
+  `;
+  document.getElementById("recentRows").innerHTML = masterData.orders.slice().reverse().slice(0,5).map(o => `
+    <tr><td><strong>${o.poNumber}</strong></td><td>${o.distributorName}</td><td>${o.territory||'-'}</td><td>${formatDate(o.orderDate)}</td><td><span class="status ${o.statusClass}">${o.statusLabel}</span></td><td>${o.totalItem} item</td></tr>
+  `).join("");
+  document.getElementById("userRows").innerHTML = masterData.users.map(u => `
+    <tr><td>${u.name}</td><td>${u.email}</td><td><span class="pill">${u.role}</span></td><td>${u.area||'-'}</td></tr>
+  `).join("");
+  document.getElementById("orderRows").innerHTML = masterData.orders.slice().reverse().map(o => `
+    <tr><td>${o.poNumber}</td><td>${o.distributorName}</td><td>${o.territory||'-'}</td><td>${formatDate(o.orderDate)}</td><td><span class="status ${o.statusClass}">${o.statusLabel}</span></td><td>${o.totalItem}</td><td>${o.quotation?.fileName||'-'}</td></tr>
+  `).join("");
+  renderStockIn();
+}
+
+function renderStockIn(){
+  const rows = catalogData.map(p => {
+    const stock = (currentProducts.find(sp => sp.id === p.id) || {}).stock || 0;
+    return { ...p, stock };
+  });
+  document.getElementById("stockInRows").innerHTML = rows.map(p => `
+    <tr data-segment="${p.segment}" data-name="${p.name.toLowerCase()}" data-id="${p.id}">
+      <td><code style="font-size:11px">${p.id}</code></td>
+      <td>${p.name}</td>
+      <td>${p.uom}</td>
+      <td>${p.volume}</td>
+      <td><span class="badge-${p.segment === 'RETAIL' ? 'retail' : 'industry'}">${p.segment}</span></td>
+      <td><strong>${p.stock}</strong></td>
+      <td><input type="number" class="stock-in-input" data-pid="${p.id}" data-pname="${p.name.replace(/"/g,'')}" min="0" value="" placeholder="0"></td>
+    </tr>
+  `).join("");
+}
+
+function filterStockIn(){
+  const q = document.getElementById("siSearch").value.toLowerCase();
+  const seg = document.getElementById("siSegment").value;
+  document.querySelectorAll("#stockInRows tr").forEach(tr => {
+    const name = tr.dataset.name || "";
+    const id = (tr.dataset.id || "").toLowerCase();
+    const s = tr.dataset.segment || "";
+    const matchQ = !q || name.includes(q) || id.includes(q);
+    const matchSeg = !seg || s === seg;
+    tr.style.display = matchQ && matchSeg ? "" : "none";
+  });
+}
+
+async function saveStockIn(){
+  const inputs = document.querySelectorAll(".stock-in-input");
+  const items = [];
+  inputs.forEach(inp => {
+    const v = Number(inp.value);
+    if(v > 0) items.push({ productId: inp.dataset.pid, productName: inp.dataset.pname, stockIn: v });
+  });
+  if(items.length === 0){ alert("Isi minimal satu produk yang ingin di-stock-in."); return; }
+  const result = await apiRequest("/api/stock-in", { method:"POST", body: JSON.stringify({ items }) });
+  alert(`✅ Stock In berhasil! ${result.updated} produk diperbarui.`);
+  inputs.forEach(inp => inp.value = "");
+  masterData = await apiRequest("/api/master");
+  currentProducts = masterData.products;
+  renderStockIn();
+}
+
+function populateDistributorDropdowns(){
+  const distributors = masterData.users.filter(u => u.role === "distributor");
+  const opts = distributors.map(d => `<option value="${d.id}" data-territories='${JSON.stringify(d.territories||[])}'>${d.name}</option>`).join("");
+  document.getElementById("alokasiDist").innerHTML = `<option value="">-- Pilih Distributor --</option>${opts}`;
+  document.getElementById("adjDist").innerHTML = `<option value="">-- Pilih Distributor --</option>${opts}`;
+}
+
+function loadAlokasiTerritory(){
+  const sel = document.getElementById("alokasiDist");
+  const opt = sel.options[sel.selectedIndex];
+  const territories = opt ? JSON.parse(opt.dataset.territories || "[]") : [];
+  document.getElementById("alokasiTerr").innerHTML = `<option value="">-- Pilih Territory --</option>${territories.map(t => `<option value="${t}">${t}</option>`).join("")}`;
+}
+
+function loadAdjTerritory(){
+  const sel = document.getElementById("adjDist");
+  const opt = sel.options[sel.selectedIndex];
+  const territories = opt ? JSON.parse(opt.dataset.territories || "[]") : [];
+  document.getElementById("adjTerr").innerHTML = `<option value="">-- Pilih Territory --</option>${territories.map(t => `<option value="${t}">${t}</option>`).join("")}`;
+}
+
+async function loadAlokasiProduk(){
+  const distId = document.getElementById("alokasiDist").value;
+  const terr = document.getElementById("alokasiTerr").value;
+  const seg = document.getElementById("alokasiSegment").value;
+  if(!distId || !terr){ alert("Pilih distributor dan territory terlebih dahulu."); return; }
+  const { allocations } = await apiRequest(`/api/allocations?distributorId=${distId}&territory=${encodeURIComponent(terr)}&segment=${seg}`);
+  const allocMap = {};
+  allocations.forEach(a => allocMap[a.productId] = a);
+  const segFilter = seg === "retail" ? "RETAIL" : "INDUSTRY";
+  const filteredCatalog = catalogData.filter(p => p.segment === segFilter);
+  document.getElementById("alokasiRows").innerHTML = filteredCatalog.map(p => {
+    const stock = (currentProducts.find(sp => sp.id === p.id) || {}).stock || 0;
+    const allocQty = allocMap[p.id] ? allocMap[p.id].allocationQty : 0;
+    return `
+      <tr data-segment="${p.segment}" data-name="${p.name.toLowerCase()}" data-id="${p.id}">
+        <td><code style="font-size:11px">${p.id}</code></td>
+        <td>${p.name}</td>
+        <td>${p.uom}</td>
+        <td>${p.volume}</td>
+        <td><strong>${stock}</strong></td>
+        <td><input type="number" class="stock-in-input" data-pid="${p.id}" min="0" value="${allocQty}" placeholder="0"></td>
+      </tr>`;
+  }).join("");
+  document.getElementById("alokasiProdukBox").style.display = "block";
+}
+
+function filterAlokasi(){
+  const q = document.getElementById("alokasiSearch").value.toLowerCase();
+  const seg = document.getElementById("alokasiSegFilter").value;
+  document.querySelectorAll("#alokasiRows tr").forEach(tr => {
+    const name = tr.dataset.name || "";
+    const id = (tr.dataset.id || "").toLowerCase();
+    const s = tr.dataset.segment || "";
+    tr.style.display = (!q || name.includes(q) || id.includes(q)) && (!seg || s === seg) ? "" : "none";
+  });
+}
+
+async function saveAlokasi(){
+  const distId = document.getElementById("alokasiDist").value;
+  const terr = document.getElementById("alokasiTerr").value;
+  const seg = document.getElementById("alokasiSegment").value;
+  const inputs = document.querySelectorAll("#alokasiRows .stock-in-input");
+  const items = [];
+  inputs.forEach(inp => {
+    if(inp.dataset.pid) items.push({ productId: inp.dataset.pid, allocationQty: Number(inp.value || 0) });
+  });
+  if(items.length === 0){ alert("Tidak ada produk yang diisi."); return; }
+  await apiRequest("/api/allocations", {
+    method: "POST",
+    body: JSON.stringify({ distributorId: distId, territory: terr, segment: seg, items }),
+  });
+  masterData = await apiRequest("/api/master");
+  alert("✅ Alokasi berhasil disimpan!");
+}
+
+async function loadAdjProduk(){
+  const distId = document.getElementById("adjDist").value;
+  const terr = document.getElementById("adjTerr").value;
+  const customer = document.getElementById("adjCustomer").value;
+  if(!distId || !terr){ alert("Pilih distributor dan territory terlebih dahulu."); return; }
+  const { allocations } = await apiRequest(`/api/allocations?distributorId=${distId}&territory=${encodeURIComponent(terr)}`);
+  document.getElementById("adjProdukTitle").textContent = `Sisa Alokasi — ${terr} ${customer ? '| Customer: '+customer : ''}`;
+  document.getElementById("adjRows").innerHTML = allocations.map(a => {
+    const prod = currentProducts.find(p => p.id === a.productId) || {};
+    const segBadge = a.segment === "retail" ? '<span class="badge-retail">Retail</span>' : '<span class="badge-industry">Industry</span>';
+    return `
+      <tr>
+        <td><code style="font-size:11px">${a.productId}</code></td>
+        <td>${a.productName}</td>
+        <td>${segBadge}</td>
+        <td>${a.allocationQty}</td>
+        <td>${a.usedQty}</td>
+        <td><strong>${a.remaining}</strong></td>
+        <td><input type="number" class="stock-in-input" data-pid="${a.productId}" data-seg="${a.segment}" min="0" max="${a.remaining}" value="" placeholder="0"></td>
+      </tr>`;
+  }).join("");
+  document.getElementById("adjProdukBox").style.display = "block";
+}
+
+async function saveAdjustment(){
+  const distId = document.getElementById("adjDist").value;
+  const terr = document.getElementById("adjTerr").value;
+  const customer = document.getElementById("adjCustomer").value;
+  if(!customer){ alert("Isi nama customer terlebih dahulu."); return; }
+  const inputs = document.querySelectorAll("#adjRows .stock-in-input");
+  const items = [];
+  inputs.forEach(inp => {
+    const v = Number(inp.value);
+    if(v > 0) items.push({ productId: inp.dataset.pid, segment: inp.dataset.seg, qty: v });
+  });
+  if(items.length === 0){ alert("Isi minimal satu qty untuk dipotong."); return; }
+  await apiRequest("/api/stock-adjustment", {
+    method: "POST",
+    body: JSON.stringify({ distributorId: distId, territory: terr, customerName: customer, items }),
+  });
+  alert("✅ Stock Adjustment berhasil disimpan!");
+  masterData = await apiRequest("/api/master");
+  currentProducts = masterData.products;
+  await loadAdjProduk();
+}
+
+document.getElementById("userForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  await apiRequest("/api/users", { method:"POST", body: JSON.stringify({
+    name: document.getElementById("newUserName").value,
+    email: document.getElementById("newUserEmail").value,
+    role: document.getElementById("newUserRole").value,
+    area: document.getElementById("newUserArea").value,
+    distributorName: document.getElementById("newDistributorName").value,
+    address: document.getElementById("newDistributorAddress").value,
+  })});
+  e.target.reset();
+  masterData = await apiRequest("/api/master");
+  renderMaster();
+  populateDistributorDropdowns();
+  alert("✅ User berhasil ditambahkan. Password default: password123");
+});
+
+document.querySelectorAll(".sidebar a[data-view]").forEach(link => {
+  link.addEventListener("click", e => { e.preventDefault(); switchView(link.dataset.view); });
+});
+
+loadMaster().catch(err => alert(err.message));
+</script>
+</body>
+</html>

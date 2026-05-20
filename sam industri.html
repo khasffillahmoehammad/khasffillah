@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PL-DIOS | SAM Industri</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#f0f4f9}
+.shell{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+.sidebar{background:linear-gradient(180deg,#1e3a8a 0%,#0046ad 60%,#1d4ed8 100%);color:white;padding:25px 20px;position:sticky;top:0;height:100vh}
+.logo{text-align:center;margin-bottom:32px}.logo h2{font-size:30px;font-weight:800;letter-spacing:2px}.logo p{font-size:11px;opacity:.85}
+.menu-title{font-size:11px;opacity:.7;text-transform:uppercase;margin:16px 0 8px}
+.sidebar a{display:flex;align-items:center;gap:12px;color:white;text-decoration:none;padding:13px 16px;border-radius:12px;margin-bottom:6px;font-weight:500;font-size:14px;transition:.2s}
+.sidebar a:hover,.sidebar a.active{background:rgba(255,255,255,.18);transform:translateX(3px)}
+.main{padding:28px}
+.topbar,.card-box{background:#fff;border-radius:16px;padding:22px;box-shadow:0 2px 16px rgba(0,0,0,.06);margin-bottom:22px}
+.topbar{display:flex;justify-content:space-between;align-items:center}.topbar h3{color:#1e3a8a;font-weight:800;margin:0}
+.view{display:none}.view.active{display:block}
+.summary-card{background:#fff;border-radius:16px;padding:22px;box-shadow:0 2px 16px rgba(0,0,0,.06);height:100%}
+.summary-card .icon{width:50px;height:50px;border-radius:14px;color:white;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:14px}
+.bg-blue{background:#0046ad}.bg-green{background:#00a651}.bg-orange{background:#ff9800}.bg-purple{background:#7c3aed}
+.summary-card h3{font-weight:800;margin:0;color:#1f2937;font-size:26px}.summary-card p{margin:4px 0 0;color:#667085;font-size:13px}
+.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.section-header h5{font-weight:700;color:#1e3a8a;margin:0}
+table{width:100%}.table th{background:#eff6ff;font-size:12px;color:#1e3a8a;font-weight:700;padding:10px 12px;border-bottom:1px solid #bfdbfe}
+.table td{padding:10px 12px;border-bottom:1px solid #f5f7fa;font-size:13px;vertical-align:middle}
+.table tr:hover td{background:#eff6ff}
+.badge-industry{background:#cce5ff;color:#004085;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700}
+.progress-wrap{background:#e2e8f0;border-radius:20px;height:8px;overflow:hidden}
+.progress-bar-blue{background:#0046ad;height:8px;border-radius:20px}
+.filter-bar{background:#eff6ff;border-radius:12px;padding:12px 16px;margin-bottom:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.filter-bar select,.filter-bar input{border-radius:9px;border:1px solid #bfdbfe;padding:8px 12px;font-size:13px;background:#fff}
+@media(max-width:900px){.shell{grid-template-columns:1fr}.sidebar{position:relative;height:auto}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="logo"><h2>PL-DIOS</h2><p>SAM Industri — Sales Region I</p></div>
+    <div class="menu-title">Menu</div>
+    <a href="#" data-view="dashboard" class="active"><i class="fas fa-industry"></i> Dashboard Industri</a>
+    <a href="#" data-view="alokasi"><i class="fas fa-sliders"></i> Sisa Alokasi</a>
+    <a href="#" onclick="logout()"><i class="fas fa-right-from-bracket"></i> Logout</a>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h3>Dashboard Penjualan Industri</h3>
+        <p class="text-muted mb-0 mt-1" style="font-size:13px">Segmen Industri — Sales Region I</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span class="badge-industry" style="font-size:13px;padding:6px 14px">INDUSTRI</span>
+        <strong style="color:#1e3a8a" id="samName">SAM Industri</strong>
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <section id="dashboardView" class="view active">
+      <div class="row g-3 mb-4" id="summary"></div>
+      <div class="card-box">
+        <div class="section-header">
+          <h5>Penjualan per Distributor & Territory</h5>
+          <div class="filter-bar" style="margin:0">
+            <select id="filterDist" onchange="filterTable()"><option value="">Semua Distributor</option></select>
+            <select id="filterTerr" onchange="filterTable()"><option value="">Semua Territory</option></select>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table">
+            <thead><tr><th>Distributor</th><th>Territory</th><th>Total PO</th><th>Total Qty (Drum)</th><th>Completed</th></tr></thead>
+            <tbody id="salesRows"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- SISA ALOKASI -->
+    <section id="alokasiView" class="view">
+      <div class="card-box">
+        <div class="section-header">
+          <h5>Sisa Alokasi Industri — Bulan Ini</h5>
+          <div class="filter-bar" style="margin:0">
+            <select id="allocDistFilter" onchange="filterAllocTable()"><option value="">Semua Distributor</option></select>
+            <select id="allocTerrFilter" onchange="filterAllocTable()"><option value="">Semua Territory</option></select>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table">
+            <thead><tr><th>Distributor</th><th>Territory</th><th>Produk</th><th>Alokasi</th><th>Terpakai</th><th>Sisa</th><th>Progress</th></tr></thead>
+            <tbody id="allocRows"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="/pldios-api.js"></script>
+<script>
+let samData = null;
+
+function ensureSAM(){
+  const user = requireLogin();
+  if(!user) return null;
+  if(user.role !== "sam_industri"){ alert("Akses ditolak."); redirectByRole(user); return null; }
+  document.getElementById("samName").textContent = user.name;
+  return user;
+}
+
+function switchView(view){
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+  document.getElementById(`${view}View`).classList.add("active");
+  document.querySelectorAll(".sidebar a[data-view]").forEach(a => a.classList.toggle("active", a.dataset.view === view));
+}
+
+async function loadSAM(){
+  if(!ensureSAM()) return;
+  const [dashboard, masterData] = await Promise.all([
+    apiRequest("/api/sam-dashboard?segment=industri"),
+    apiRequest("/api/master"),
+  ]);
+  samData = { dashboard, masterData };
+  renderDashboard();
+  renderAllocations();
+}
+
+function renderDashboard(){
+  const { dashboard, masterData } = samData;
+  const indOrders = masterData.orders.filter(o => o.segment === "industri");
+  document.getElementById("summary").innerHTML = `
+    <div class="col-md-3"><div class="summary-card"><div class="icon bg-blue"><i class="fas fa-file-invoice"></i></div><h3>${indOrders.length}</h3><p>Total PO Industri</p></div></div>
+    <div class="col-md-3"><div class="summary-card"><div class="icon bg-orange"><i class="fas fa-clock"></i></div><h3>${indOrders.filter(o=>o.status==="pending_po").length}</h3><p>Pending PO</p></div></div>
+    <div class="col-md-3"><div class="summary-card"><div class="icon bg-green"><i class="fas fa-circle-check"></i></div><h3>${indOrders.filter(o=>o.status==="completed").length}</h3><p>Completed</p></div></div>
+    <div class="col-md-3"><div class="summary-card"><div class="icon bg-purple"><i class="fas fa-boxes-stacking"></i></div><h3>${indOrders.reduce((s,o)=>s+o.items.reduce((ss,i)=>ss+Number(i.qty||0),0),0)}</h3><p>Total Qty (Drum)</p></div></div>
+  `;
+
+  const distNames = [...new Set(dashboard.byDistributor.map(d => d.distributorName))];
+  const terrs = [...new Set(dashboard.byDistributor.flatMap(d => d.territories))].filter(t => t.includes("INDUSTRI"));
+  document.getElementById("filterDist").innerHTML = `<option value="">Semua Distributor</option>${distNames.map(d=>`<option>${d}</option>`).join("")}`;
+  document.getElementById("filterTerr").innerHTML = `<option value="">Semua Territory</option>${terrs.map(t=>`<option>${t}</option>`).join("")}`;
+
+  renderSalesRows(dashboard.byDistributor);
+}
+
+function renderSalesRows(data){
+  document.getElementById("salesRows").innerHTML = data.length === 0
+    ? `<tr><td colspan="5" class="text-center text-muted py-4">Belum ada data penjualan industri.</td></tr>`
+    : data.map(d => `
+        <tr>
+          <td><strong>${d.distributorName}</strong></td>
+          <td><span class="badge-industry">TERRITORY INDUSTRI</span></td>
+          <td>${d.totalOrders}</td>
+          <td><strong>${d.totalQty}</strong></td>
+          <td>${d.completedOrders}</td>
+        </tr>`).join("");
+}
+
+function filterTable(){
+  const dist = document.getElementById("filterDist").value;
+  const filtered = samData.dashboard.byDistributor.filter(d => !dist || d.distributorName === dist);
+  renderSalesRows(filtered);
+}
+
+function renderAllocations(){
+  const { masterData } = samData;
+  const indAllocs = masterData.allocations.filter(a => a.segment === "industri");
+  const distNames = [...new Set(indAllocs.map(a => a.distributorName))];
+  document.getElementById("allocDistFilter").innerHTML = `<option value="">Semua Distributor</option>${distNames.map(d=>`<option>${d}</option>`).join("")}`;
+  document.getElementById("allocTerrFilter").innerHTML = `<option value="">Semua Territory</option><option>TERRITORY INDUSTRI</option>`;
+  renderAllocRows(indAllocs);
+}
+
+function renderAllocRows(data){
+  document.getElementById("allocRows").innerHTML = data.length === 0
+    ? `<tr><td colspan="7" class="text-center text-muted py-4">Belum ada alokasi industri.</td></tr>`
+    : data.map(a => {
+        const pct = a.allocationQty > 0 ? Math.min(100, Math.round((a.usedQty/a.allocationQty)*100)) : 0;
+        return `<tr>
+          <td>${a.distributorName}</td>
+          <td><span class="badge-industry">${a.territory||'INDUSTRI'}</span></td>
+          <td>${a.productName}</td>
+          <td>${a.allocationQty}</td>
+          <td>${a.usedQty}</td>
+          <td><strong>${a.remaining}</strong></td>
+          <td><div class="progress-wrap"><div class="progress-bar-blue" style="width:${pct}%"></div></div><small class="text-muted">${pct}%</small></td>
+        </tr>`;
+      }).join("");
+}
+
+function filterAllocTable(){
+  const dist = document.getElementById("allocDistFilter").value;
+  const indAllocs = samData.masterData.allocations.filter(a =>
+    a.segment === "industri" && (!dist || a.distributorName === dist)
+  );
+  renderAllocRows(indAllocs);
+}
+
+document.querySelectorAll(".sidebar a[data-view]").forEach(link => {
+  link.addEventListener("click", e => { e.preventDefault(); switchView(link.dataset.view); });
+});
+
+loadSAM().catch(err => alert(err.message));
+</script>
+</body>
+</html>

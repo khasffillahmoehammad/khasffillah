@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PL-DIOS | Print PO</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+body{font-family:'Segoe UI',sans-serif;background:#eef2f7}
+.sheet{width:900px;max-width:100%;margin:30px auto;background:white;padding:44px;box-shadow:0 10px 35px rgba(0,0,0,.12);border-radius:4px}
+.print-btn{position:fixed;right:24px;top:24px;border:none;border-radius:12px;background:#0046ad;color:white;padding:12px 20px;font-weight:700;cursor:pointer;z-index:99}
+
+/* HEADER */
+.po-header{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #0046ad;padding-bottom:18px;margin-bottom:22px}
+.po-header-left h2{font-size:26px;font-weight:800;color:#003366;margin-bottom:2px}
+.po-header-left p{color:#667085;margin:0;font-size:13px}
+.logo-img{width:110px;height:80px;object-fit:contain;border:1px solid #dde3ee;border-radius:10px;padding:8px}
+
+/* PO NUMBER BOX */
+.po-number-box{background:linear-gradient(90deg,#0046ad,#00a651);color:white;border-radius:12px;padding:12px 20px;margin-bottom:22px;display:flex;justify-content:space-between;align-items:center}
+.po-number-box .po-num{font-size:20px;font-weight:800;letter-spacing:1px}
+.po-number-box .po-date{font-size:13px;opacity:.9}
+
+/* INFO GRID */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-bottom:22px;border:1px solid #e5eaf3;border-radius:12px;overflow:hidden}
+.info-cell{padding:12px 16px;border-bottom:1px solid #e5eaf3;border-right:1px solid #e5eaf3}
+.info-cell:nth-child(even){border-right:none}
+.info-cell:nth-last-child(-n+2){border-bottom:none}
+.info-cell .label{font-size:11px;color:#667085;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.info-cell .val{font-size:14px;font-weight:600;color:#1f2937}
+
+/* TABLE */
+.po-table{width:100%;border-collapse:collapse;margin-bottom:24px}
+.po-table thead tr{background:#003366;color:white}
+.po-table th{padding:11px 14px;font-size:13px;font-weight:600;text-align:left}
+.po-table td{padding:10px 14px;border-bottom:1px solid #eef2f7;font-size:13px}
+.po-table tbody tr:last-child td{border-bottom:none}
+.po-table tbody tr:nth-child(even){background:#f8fafc}
+.badge-seg{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700}
+.badge-retail{background:#d4edda;color:#155724}
+.badge-industri{background:#cce5ff;color:#004085}
+.badge-kam{background:#fff3cd;color:#856404}
+
+/* FOOTER */
+.po-footer{display:flex;justify-content:space-between;align-items:flex-end;margin-top:30px;padding-top:20px;border-top:1px solid #eef2f7}
+.sign-box{text-align:center;min-width:160px}
+.sign-box .sign-label{font-size:12px;color:#667085;margin-bottom:8px}
+.stamp-img{width:150px;height:120px;object-fit:contain;border:1px dashed #ccd3df;border-radius:10px;padding:8px}
+.sign-line{border-top:1px solid #374151;margin-top:50px;padding-top:6px;font-size:12px;font-weight:600}
+.payment-badge{display:inline-block;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:700;background:#eef4ff;color:#0046ad}
+
+@media print{
+  body{background:white}
+  .sheet{box-shadow:none;margin:0;width:100%;padding:28px}
+  .print-btn{display:none}
+}
+</style>
+</head>
+<body>
+<button class="print-btn" onclick="window.print()"><i>🖨</i> Cetak PDF</button>
+
+<div class="sheet">
+
+  <!-- HEADER -->
+  <div class="po-header">
+    <div class="po-header-left">
+      <h2>PURCHASE ORDER</h2>
+      <p>Pertamina Lubricants — Distributor Integrated Ordering System</p>
+    </div>
+    <img id="logo" class="logo-img" alt="Logo Distributor" style="display:none">
+  </div>
+
+  <!-- PO NUMBER -->
+  <div class="po-number-box">
+    <div>
+      <div style="font-size:11px;opacity:.8;margin-bottom:2px">NOMOR PO</div>
+      <div class="po-num" id="poNumber">—</div>
+    </div>
+    <div class="text-end">
+      <div class="po-date" id="poDate"></div>
+      <div id="deliveryTypeBadge" style="margin-top:4px;opacity:.9"></div>
+    </div>
+  </div>
+
+  <!-- INFO GRID -->
+  <div class="info-grid">
+    <div class="info-cell">
+      <div class="label">Distributor</div>
+      <div class="val" id="distributorName">—</div>
+    </div>
+    <div class="info-cell">
+      <div class="label">Alamat</div>
+      <div class="val" id="address">—</div>
+    </div>
+    <div class="info-cell">
+      <div class="label">Territory</div>
+      <div class="val" id="territory">—</div>
+    </div>
+    <div class="info-cell">
+      <div class="label">Segmen</div>
+      <div class="val" id="segmentCell">—</div>
+    </div>
+    <div class="info-cell">
+      <div class="label">Nama Customer</div>
+      <div class="val" id="customerName">—</div>
+    </div>
+    <div class="info-cell">
+      <div class="label">Customer ID</div>
+      <div class="val" id="customerId">—</div>
+    </div>
+    <div class="info-cell">
+      <div class="label">Kode PO Eksternal</div>
+      <div class="val" id="poCode">—</div>
+    </div>
+    <div class="info-cell">
+      <div class="label">Metode Pembayaran</div>
+      <div class="val" id="paymentMethod">—</div>
+    </div>
+  </div>
+
+  <!-- PRODUCT TABLE -->
+  <table class="po-table">
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Nama Produk</th>
+        <th>Segmen Alokasi</th>
+        <th style="text-align:right">Qty (Dus)</th>
+      </tr>
+    </thead>
+    <tbody id="itemRows"></tbody>
+    <tfoot>
+      <tr style="background:#f0f4fb;font-weight:700">
+        <td colspan="3" style="padding:10px 14px;font-size:13px">Total</td>
+        <td id="totalQty" style="padding:10px 14px;text-align:right;font-size:14px"></td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <!-- FOOTER -->
+  <div class="po-footer">
+    <div>
+      <div style="font-size:12px;color:#667085;margin-bottom:6px">Catatan</div>
+      <div style="font-size:13px;color:#374151">Dokumen ini dicetak dari sistem PL-DIOS.<br>Harap konfirmasi kepada Admin Pertamina Lubricants.</div>
+    </div>
+    <div class="sign-box">
+      <div class="sign-label">Stempel & Tanda Tangan Distributor</div>
+      <img id="stamp" class="stamp-img" alt="Stempel" style="display:none">
+      <div class="sign-line" id="distributorSign">—</div>
+    </div>
+  </div>
+
+</div>
+
+<script src="/pldios-api.js"></script>
+<script>
+function segBadge(seg) {
+  if (!seg) return "—";
+  const map = { retail: "badge-retail", industri: "badge-industri", kam: "badge-kam" };
+  const cls = map[seg] || "";
+  return `<span class="badge-seg ${cls}">${seg.charAt(0).toUpperCase()+seg.slice(1)}</span>`;
+}
+
+async function loadPo() {
+  const params = new URLSearchParams(window.location.search);
+  const orderId = params.get("orderId");
+  const data = await apiRequest("/api/orders");
+  const order = data.orders.find(o => o.id === orderId || o.poNumber === orderId);
+
+  if (!order) { alert("PO tidak ditemukan."); return; }
+
+  const profileData = await apiRequest(`/api/profile?userId=${order.distributorId}`);
+  const profile = profileData.profile || {};
+
+  // Fill header
+  document.getElementById("poNumber").textContent = order.poNumber;
+  document.getElementById("poDate").textContent = formatDate(order.orderDate);
+  document.getElementById("deliveryTypeBadge").textContent = "Delivery: " + (order.deliveryType || "—");
+
+  // Fill info grid
+  document.getElementById("distributorName").textContent = profile.distributorName || order.distributorName || "—";
+  document.getElementById("address").textContent = profile.address || "—";
+  document.getElementById("territory").textContent = order.territory || "—";
+  document.getElementById("segmentCell").innerHTML = segBadge(order.segment);
+  document.getElementById("customerName").textContent = order.customerName || "—";
+  document.getElementById("customerId").textContent = order.customerId || "—";
+  document.getElementById("poCode").textContent = order.poCode || "—";
+  document.getElementById("paymentMethod").textContent = order.paymentMethod || "—";
+
+  // Fill table
+  let totalQty = 0;
+  document.getElementById("itemRows").innerHTML = order.items.map((item, i) => {
+    totalQty += Number(item.qty || 0);
+    return `
+      <tr>
+        <td>${i + 1}</td>
+        <td><strong>${item.productName}</strong></td>
+        <td>${segBadge(item.allocationType || order.segment)}</td>
+        <td style="text-align:right;font-weight:700">${item.qty}</td>
+      </tr>
+    `;
+  }).join("");
+  document.getElementById("totalQty").textContent = totalQty + " Dus";
+
+  // Logo & stamp
+  if (profile.logoDataUrl) {
+    const logo = document.getElementById("logo");
+    logo.src = profile.logoDataUrl;
+    logo.style.display = "block";
+  }
+  if (profile.stampDataUrl) {
+    const stamp = document.getElementById("stamp");
+    stamp.src = profile.stampDataUrl;
+    stamp.style.display = "block";
+  }
+  document.getElementById("distributorSign").textContent = profile.distributorName || "—";
+}
+
+loadPo().catch(err => alert(err.message));
+</script>
+</body>
+</html>

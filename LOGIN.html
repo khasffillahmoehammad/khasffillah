@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>PL DIOS | Pertamina Lubricants</title>
+
+    <!-- ICON -->
+    <link rel="shortcut icon" href="https://hris.pertaminalubricants.com/assets/images/idaman_logo.png">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://hris.pertaminalubricants.com/assets/css/backend.min.css">
+
+    <!-- ICON -->
+    <link rel="stylesheet" href="https://hris.pertaminalubricants.com/assets/vendor/line-awesome/dist/line-awesome/css/line-awesome.min.css">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            font-family:'Segoe UI', sans-serif;
+            overflow:hidden;
+        }
+
+        /* BACKGROUND */
+
+        .wrapper{
+
+            min-height:100vh;
+
+            display:flex;
+            justify-content:center;
+            align-items:center;
+
+            position:relative;
+            overflow:hidden;
+
+            background:linear-gradient(
+                135deg,
+                #0046ad 0%,
+                #0066cc 30%,
+                #00a651 70%,
+                #008f6b 100%
+            );
+
+            background-size:400% 400%;
+
+            animation:bgMove 12s ease infinite;
+
+        }
+
+        @keyframes bgMove{
+
+            0%{
+                background-position:0% 50%;
+            }
+
+            50%{
+                background-position:100% 50%;
+            }
+
+            100%{
+                background-position:0% 50%;
+            }
+
+        }
+
+        .wrapper::before{
+
+            content:'';
+
+            position:absolute;
+
+            width:700px;
+            height:700px;
+
+            border-radius:50%;
+
+            background:rgba(255,255,255,0.08);
+
+            top:-250px;
+            right:-180px;
+
+        }
+
+        .wrapper::after{
+
+            content:'';
+
+            position:absolute;
+
+            width:500px;
+            height:500px;
+
+            border-radius:50%;
+
+            background:rgba(255,255,255,0.06);
+
+            bottom:-180px;
+            left:-100px;
+
+        }
+
+        /* GRID EFFECT */
+
+        .grid-effect{
+
+            position:absolute;
+
+            width:100%;
+            height:100%;
+
+            background-image:
+                linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+
+            background-size:40px 40px;
+
+        }
+
+        /* CARD */
+
+        .login-card{
+
+            width:100%;
+            max-width:450px;
+
+            position:relative;
+            z-index:2;
+
+            border-radius:24px;
+
+            overflow:hidden;
+
+            background:rgba(255,255,255,0.96);
+
+            backdrop-filter:blur(10px);
+
+            box-shadow:
+                0 15px 40px rgba(0,0,0,0.25);
+
+        }
+
+        .card-header{
+
+            text-align:center;
+
+            padding:35px 30px 20px;
+
+            background:white;
+
+            border:none;
+
+        }
+
+        .card-header img{
+
+            width:230px;
+
+        }
+
+        .card-body{
+
+            padding:35px;
+
+        }
+
+        /* TITLE */
+
+        .main-title{
+
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+
+            line-height:1.2;
+
+            margin-bottom:15px;
+
+        }
+
+        .title-main{
+
+            font-size:42px;
+            font-weight:800;
+
+            color:#003366;
+
+            letter-spacing:2px;
+
+        }
+
+        .title-sub{
+
+            margin-top:6px;
+
+            font-size:14px;
+            font-weight:500;
+
+            color:#666;
+
+            text-align:center;
+
+        }
+
+        .card-body p{
+
+            color:#777;
+
+            margin-bottom:30px;
+
+            text-align:center;
+
+        }
+
+        /* INPUT */
+
+        .form-control{
+
+            height:50px;
+
+            border-radius:14px;
+
+            border:1px solid #ddd;
+
+            padding-left:15px;
+
+            transition:0.3s;
+
+        }
+
+        .form-control:focus{
+
+            border-color:#0046ad;
+
+            box-shadow:
+                0 0 0 0.2rem rgba(0,70,173,0.15);
+
+        }
+
+        .input-group-append button{
+
+            border:none;
+
+            border-radius:0 14px 14px 0;
+
+        }
+
+        /* BUTTON */
+
+        .btn-primary{
+
+            height:50px;
+
+            border:none;
+
+            border-radius:14px;
+
+            font-weight:600;
+
+            background:linear-gradient(
+                90deg,
+                #0046ad,
+                #00a651
+            );
+
+            transition:0.3s;
+
+        }
+
+        .btn-primary:hover{
+
+            transform:translateY(-2px);
+
+            box-shadow:
+                0 8px 20px rgba(0,0,0,0.2);
+
+        }
+
+        /* REGISTER */
+
+        .register-link{
+
+            text-align:center;
+
+            margin-top:20px;
+
+            color:#666;
+
+        }
+
+        .register-link a{
+
+            color:#0046ad;
+
+            text-decoration:none;
+
+            font-weight:600;
+
+        }
+
+        .register-link a:hover{
+
+            text-decoration:underline;
+
+        }
+
+        /* VERSION */
+
+        .version{
+
+            text-align:right;
+
+            margin-top:30px;
+
+            color:#999;
+
+            font-size:12px;
+
+        }
+
+        @media(max-width:576px){
+
+            .login-card{
+                margin:20px;
+            }
+
+            .card-body{
+                padding:25px;
+            }
+
+            .title-main{
+                font-size:34px;
+            }
+
+            .title-sub{
+                font-size:13px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="wrapper">
+
+    <!-- GRID -->
+    <div class="grid-effect"></div>
+
+    <!-- CARD -->
+    <div class="login-card">
+
+        <!-- HEADER -->
+        <div class="card-header">
+
+            <img
+                src="https://hris.pertaminalubricants.com/assets/images/pertamina_lubricants.png"
+                alt="Pertamina Lubricants"
+            >
+
+        </div>
+
+        <!-- BODY -->
+        <div class="card-body">
+
+            <!-- TITLE -->
+
+            <h2 class="main-title">
+
+                <span class="title-main">
+                    PL-DIOS
+                </span>
+
+                <span class="title-sub">
+                    Pertamina Lubricants - Distributor Integrated Ordering System
+                </span>
+
+            </h2>
+
+            <p>
+                prototype system sales region I.
+            </p>
+
+            <!-- FORM -->
+
+            <form id="loginForm">
+
+                <!-- EMAIL -->
+
+                <div class="form-group mb-3">
+
+                    <input
+                        type="email"
+                        class="form-control"
+                        id="email"
+                        placeholder="Email"
+                        value="distributor@pldios.local"
+                        required
+                    >
+
+                </div>
+
+                <!-- PASSWORD -->
+
+                <div class="form-group mb-3">
+
+                    <div class="input-group">
+
+                        <input
+                            type="password"
+                            class="form-control"
+                            id="password"
+                            placeholder="Password"
+                            value="password123"
+                            required
+                        >
+
+                        <div class="input-group-append">
+
+                            <button
+                                type="button"
+                                class="btn btn-primary"
+                                onclick="showPassword()"
+                            >
+
+                                <i
+                                    class="las la-eye"
+                                    id="eyeIcon"
+                                ></i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- LOGIN -->
+
+                <button
+                    type="submit"
+                    class="btn btn-primary btn-block w-100"
+                >
+
+                    Log In
+
+                </button>
+
+                <!-- REGISTER -->
+
+                <div class="register-link">
+
+                    Belum daftar?
+
+                    <a href="#">
+                        Register !
+                    </a>
+
+                </div>
+
+                <!-- VERSION -->
+
+                <div class="version">
+
+                    Version 1.0.5
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="/pldios-api.js"></script>
+<script>
+
+    function showPassword(){
+
+        let password =
+            document.getElementById("password");
+
+        let eyeIcon =
+            document.getElementById("eyeIcon");
+
+        if(password.type === "password"){
+
+            password.type = "text";
+
+            eyeIcon.classList.remove("la-eye");
+            eyeIcon.classList.add("la-eye-slash");
+
+        }else{
+
+            password.type = "password";
+
+            eyeIcon.classList.remove("la-eye-slash");
+            eyeIcon.classList.add("la-eye");
+
+        }
+
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", async function(event){
+        event.preventDefault();
+
+        try{
+            const payload = await apiRequest("/api/login", {
+                method: "POST",
+                body: JSON.stringify({
+                    email: document.getElementById("email").value,
+                    password: document.getElementById("password").value,
+                }),
+            });
+
+            localStorage.setItem("pldiosUser", JSON.stringify(payload.user));
+            localStorage.setItem("pldiosToken", payload.token);
+            redirectByRole(payload.user);
+        }catch(error){
+            alert(error.message);
+        }
+    });
+
+</script>
+
+</body>
+</html>
